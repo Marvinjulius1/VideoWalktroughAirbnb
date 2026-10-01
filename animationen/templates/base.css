@@ -1,0 +1,32 @@
+@font-face { font-family: "Inter"; font-weight: 400; src: url("../fonts/inter-400.woff2"); }
+@font-face { font-family: "Inter"; font-weight: 500; src: url("../fonts/inter-500.woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; src: url("../fonts/inter-600.woff2"); }
+@font-face { font-family: "Inter"; font-weight: 700; src: url("../fonts/inter-700.woff2"); }
+@font-face { font-family: "Inter"; font-weight: 800; src: url("../fonts/inter-800.woff2"); }
+
+:root {
+  --bg: #000;
+  --card: #1c1c1e;
+  --card-2: #2c2c2e;
+  --text: #fff;
+  --muted: #8e8e93;
+  --green: #30d158;
+  --red: #ff453a;
+  --blue: #0a84ff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 1080px;
+  height: 1920px;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "tnum" 1, "cv11" 1;
+}
+
+/* Greenscreen variant for overlays: key out in CapCut with "Chroma key". */
+body.green { background: #00ff00; }

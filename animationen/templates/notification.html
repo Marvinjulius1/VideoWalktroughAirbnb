@@ -1,0 +1,77 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  .stack { position: absolute; left: 40px; right: 40px; top: 300px; }
+  .note {
+    position: absolute; left: 0; right: 0; height: 210px;
+    background: rgba(44, 44, 46, 0.96); border-radius: 56px;
+    display: flex; align-items: center; padding: 0 44px; gap: 34px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+  body.green .note { background: #2c2c2e; box-shadow: none; }
+  .icon {
+    flex: none; width: 112px; height: 112px; border-radius: 26px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px; font-weight: 800; color: #fff;
+  }
+  .txt { flex: 1; min-width: 0; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; }
+  .title { font-size: 42px; font-weight: 600; letter-spacing: -0.4px; }
+  .time { font-size: 32px; color: #98989f; font-weight: 500; }
+  .body { font-size: 40px; color: #ebebf0; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px; }
+</style></head>
+<body>
+<div class="stack" id="stack"></div>
+<script src="lib.js"></script>
+<script>
+  // Params: preset (payment|dividend|crypto|sales), or n1..n3 as "title|body|icon|color"
+  const PRESETS = {
+    payment: [
+      ["Bank", "+$2,450.00 added to your account", "$", "#30d158"],
+      ["Bank", "+$1,800.00 added to your account", "$", "#30d158"],
+      ["Bank", "+$3,120.00 added to your account", "$", "#30d158"],
+    ],
+    dividend: [
+      ["Dividend received", "+$248.50 paid into your portfolio", "%", "#0a84ff"],
+      ["Dividend received", "+$312.20 paid into your portfolio", "%", "#0a84ff"],
+      ["Dividend received", "+$190.75 paid into your portfolio", "%", "#0a84ff"],
+    ],
+    crypto: [
+      ["Price alert", "BTC is up 8.4% today", "₿", "#ff9f0a"],
+      ["Price alert", "Portfolio at a new all-time high", "₿", "#ff9f0a"],
+      ["Order filled", "Bought 0.05 BTC", "₿", "#ff9f0a"],
+    ],
+    sales: [
+      ["New sale", "You received an order: $49.00", "✓", "#30d158"],
+      ["New sale", "You received an order: $129.00", "✓", "#30d158"],
+      ["New sale", "You received an order: $79.00", "✓", "#30d158"],
+    ],
+  };
+  let notes = PRESETS[param("preset", "payment")] || PRESETS.payment;
+  if (P.has("n1")) notes = ["n1", "n2", "n3"].filter((k) => P.has(k)).map((k) => P.get(k).split("|"));
+  const times = ["now", "now", "now"];
+
+  $("#stack").innerHTML = notes.map((n, i) => `
+    <div class="note" id="note${i}">
+      <div class="icon" style="background:${n[3] || "#30d158"}">${n[2] || "$"}</div>
+      <div class="txt"><div class="row"><div class="title">${n[0]}</div><div class="time">${times[i]}</div></div>
+      <div class="body">${n[1]}</div></div>
+    </div>`).join("");
+
+  const GAP = 1.1; // seconds between notifications
+  window.DURATION = 0.4 + GAP * notes.length + 1.6;
+
+  window.render = (t) => {
+    notes.forEach((_, i) => {
+      const t0 = 0.4 + i * GAP;
+      const k = ease.outBack(prog(t, t0, t0 + 0.55));
+      const older = notes.length - 1 - i; // how many newer cards push this one down
+      let push = 0;
+      for (let j = i + 1; j < notes.length; j++) push += ease.outCubic(prog(t, 0.4 + j * GAP, 0.4 + j * GAP + 0.45));
+      const el = $("#note" + i);
+      el.style.opacity = clamp(prog(t, t0, t0 + 0.2));
+      el.style.transform = `translateY(${(1 - k) * -340 + push * 236}px) scale(${lerp(0.92, 1, clamp(k))})`;
+    });
+  };
+</script>
+</body></html>

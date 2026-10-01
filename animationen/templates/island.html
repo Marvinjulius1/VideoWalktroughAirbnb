@@ -1,0 +1,58 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  /* iPhone screen width 393pt -> 1080px, factor 2.75 */
+  .island {
+    position: absolute; left: 50%; top: 31px; background: #000;
+    border-radius: 60px; overflow: hidden; display: flex; align-items: center;
+  }
+  /* Without greenscreen the black pill needs a lighter backdrop to be visible. */
+  body:not(.green) { background: radial-gradient(circle at 50% 0%, #2a2a2e 0%, #0d0d0f 60%); }
+  .inner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 44px; }
+  .left { display: flex; align-items: center; gap: 26px; }
+  .icon { width: 96px; height: 96px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: 800; color: #fff; }
+  .t1 { font-size: 34px; color: #98989f; font-weight: 500; }
+  .t2 { font-size: 46px; font-weight: 700; letter-spacing: -0.6px; }
+  .amount { font-size: 64px; font-weight: 700; letter-spacing: -1.5px; }
+</style></head>
+<body>
+<div class="island" id="island">
+  <div class="inner" id="inner">
+    <div class="left">
+      <div class="icon" id="icon"></div>
+      <div><div class="t1" id="t1"></div><div class="t2" id="t2"></div></div>
+    </div>
+    <div class="amount" id="amount"></div>
+  </div>
+</div>
+<script src="lib.js"></script>
+<script>
+  // Params: title, subtitle, amount (number), prefix, icon, color
+  const color = param("color", "#30d158");
+  const amount = num("amount", 1250), prefix = param("prefix", "+$");
+  $("#icon").textContent = param("icon", "$");
+  $("#icon").style.background = color;
+  $("#t1").textContent = param("subtitle", "Payment received");
+  $("#t2").textContent = param("title", "Bank");
+  $("#amount").style.color = color;
+
+  // Pill (126x37pt) -> expanded (371x84pt) -> pill
+  const S = { w: 346, h: 102, r: 51 }, L = { w: 1020, h: 230, r: 100 };
+  window.DURATION = 4.6;
+
+  window.render = (t) => {
+    const open = ease.outBack(prog(t, 0.6, 1.25));
+    const close = ease.inOutCubic(prog(t, 3.6, 4.1));
+    const k = clamp(open, 0, 1.08) * (1 - close);
+    const w = lerp(S.w, L.w, k), h = lerp(S.h, L.h, clamp(k)), r = lerp(S.r, L.r, clamp(k));
+    const el = $("#island");
+    el.style.width = w + "px"; el.style.height = h + "px"; el.style.borderRadius = r + "px";
+    el.style.transform = `translateX(-50%)`;
+    const c = prog(t, 1.0, 1.4) * (1 - prog(t, 3.4, 3.65));
+    $("#inner").style.opacity = c;
+    $("#inner").style.filter = `blur(${(1 - c) * 12}px)`;
+    const a = ease.outExpo(prog(t, 1.1, 2.4));
+    $("#amount").textContent = prefix + fmt(amount * a, 2);
+  };
+</script>
+</body></html>

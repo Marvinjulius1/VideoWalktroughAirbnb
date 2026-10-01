@@ -1,0 +1,51 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  .wrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .label { font-size: 46px; font-weight: 500; color: var(--muted); letter-spacing: -0.5px; margin-bottom: 28px; }
+  .value { font-size: 190px; font-weight: 700; letter-spacing: -6px; line-height: 1; white-space: nowrap; }
+  .sub { font-size: 46px; font-weight: 600; margin-top: 36px; color: var(--green); }
+</style></head>
+<body>
+<div class="wrap">
+  <div class="label" id="label"></div>
+  <div class="value" id="value"></div>
+  <div class="sub" id="sub"></div>
+</div>
+<script src="lib.js"></script>
+<script>
+  // Params: from, to, decimals, prefix, suffix, label, sub, dur (count time)
+  const from = num("from", 0), to = num("to", 262481), decimals = num("decimals", 0);
+  const prefix = param("prefix", "$"), suffix = param("suffix", "");
+  const countDur = num("dur", 3.2);
+  $("#label").textContent = param("label", "");
+  $("#sub").textContent = param("sub", "");
+  window.DURATION = countDur + 1.8;
+
+  // Shrink the font so the final (widest) value fits within 960 px.
+  document.fonts.ready.then(() => {
+    const el = $("#value");
+    el.textContent = prefix + fmt(Math.max(Math.abs(from), Math.abs(to)), decimals) + suffix;
+    const w = el.getBoundingClientRect().width;
+    if (w > 960) el.style.fontSize = `${190 * 960 / w}px`;
+  });
+
+  window.render = (t) => {
+    const intro = ease.outCubic(prog(t, 0, 0.5));
+    const k = ease.outExpo(prog(t, 0.3, 0.3 + countDur));
+    const v = lerp(from, to, k);
+    const el = $("#value");
+    el.textContent = prefix + fmt(v, decimals) + suffix;
+    el.style.opacity = intro;
+    el.style.transform = `translateY(${(1 - intro) * 40}px) scale(${1 + 0.06 * ease.outBack(prog(t, 0.3 + countDur, 0.75 + countDur)) * (1 - prog(t, 0.75 + countDur, 1.2 + countDur))})`;
+    // Turn green with a soft glow once the count lands.
+    const done = prog(t, countDur, countDur + 0.4);
+    el.style.color = done > 0 ? `rgb(${lerp(255, 48, done)},${lerp(255, 209, done)},${lerp(255, 88, done)})` : "#fff";
+    el.style.textShadow = `0 0 ${60 * done}px rgba(48,209,88,${0.45 * done})`;
+    $("#label").style.opacity = ease.outCubic(prog(t, 0.1, 0.6));
+    const s = ease.outCubic(prog(t, countDur + 0.2, countDur + 0.7));
+    $("#sub").style.opacity = s;
+    $("#sub").style.transform = `translateY(${(1 - s) * 24}px)`;
+  };
+</script>
+</body></html>

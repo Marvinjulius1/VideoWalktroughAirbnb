@@ -1,0 +1,33 @@
+ANIMATIONEN – Starter-Paket
+===========================
+
+Alle Animationen: 1080x1920 (9:16), 30 fps, ca. 5 Sekunden, Apple-Stil.
+
+Ordner
+------
+  Zaehler/             hochlaufende Zahlen ($262,481 · 0.01% · $1,000,000 · $48,000)
+  Charts/              Aktien-Chart steigt / Crash / Krypto, Zinseszins-Balken
+  Benachrichtigungen/  iPhone-Mitteilungen: Zahlung, Dividende, Krypto, Verkäufe
+  Dynamic_Island/      Dynamic Island klappt auf und zeigt einen Betrag
+  Tippfeld/            Frage wird ins Eingabefeld getippt und abgeschickt
+
+Zwei Varianten
+--------------
+  *.mp4               schwarzer Hintergrund: als eigener Clip im Video verwenden
+  *_greenscreen.mp4   grüner Hintergrund: als Overlay ÜBER einen Stock-Clip legen
+
+Greenscreen in CapCut entfernen
+-------------------------------
+  1. Stock-Clip auf die Hauptspur legen.
+  2. Die *_greenscreen.mp4 darüber auf eine zweite Spur (Overlay) legen.
+  3. Overlay anklicken → "Ausschneiden/Cutout" → "Chroma Key"
+     → mit der Pipette auf das Grün klicken → Intensität auf ca. 20–30 %.
+
+Tipp: Die schwarzen Varianten kannst du alternativ mit dem Mischmodus
+"Bildschirm/Screen" über einen Clip legen, dann verschwindet das Schwarz.
+
+Neue Animationen
+----------------
+Jede Animation lässt sich mit eigenen Zahlen und Texten neu erzeugen
+(andere Beträge, andere Benachrichtigungen, andere Frage im Tippfeld).
+Einfach Claude fragen.

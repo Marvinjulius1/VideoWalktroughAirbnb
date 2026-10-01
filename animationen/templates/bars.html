@@ -1,0 +1,55 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  .title { position: absolute; left: 90px; right: 90px; top: 380px; font-size: 64px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.15; }
+  .legend { position: absolute; left: 90px; top: 560px; display: flex; gap: 48px; font-size: 34px; font-weight: 500; color: var(--muted); }
+  .legend i { display: inline-block; width: 26px; height: 26px; border-radius: 8px; margin-right: 14px; vertical-align: -3px; }
+  .chart { position: absolute; left: 90px; right: 90px; top: 700px; height: 900px; display: flex; align-items: flex-end; gap: 44px; }
+  .col { flex: 1; position: relative; height: 100%; }
+  .bar { position: absolute; left: 0; right: 0; bottom: 70px; border-radius: 22px; }
+  .growth { background: var(--green); }
+  .paid { background: #48484a; }
+  .val { position: absolute; left: -20px; right: -20px; text-align: center; font-size: 38px; font-weight: 700; letter-spacing: -0.8px; white-space: nowrap; }
+  .yr { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; font-size: 34px; font-weight: 500; color: var(--muted); }
+</style></head>
+<body>
+<div class="title" id="title"></div>
+<div class="legend"><span><i style="background:#48484a"></i>Invested</span><span><i style="background:var(--green)"></i>Growth</span></div>
+<div class="chart" id="chart"></div>
+<script src="lib.js"></script>
+<script>
+  // Params: monthly, rate (% per year), years (comma list), title
+  const monthly = num("monthly", 100), rate = num("rate", 7) / 100 / 12;
+  const years = param("years", "10,20,30,40").split(",").map(Number);
+  $("#title").textContent = param("title", `$${monthly} a month at ${num("rate", 7)}%`);
+  const fv = (y) => monthly * ((Math.pow(1 + rate, 12 * y) - 1) / rate);
+  const data = years.map((y) => ({ y, total: fv(y), paid: monthly * 12 * y }));
+  const max = Math.max(...data.map((d) => d.total));
+  const H = 760; // usable bar height in px
+
+  $("#chart").innerHTML = data.map((d, i) => `
+    <div class="col"><div class="bar growth" id="g${i}"></div><div class="bar paid" id="p${i}"></div>
+    <div class="val" id="v${i}"></div><div class="yr">${d.y} yrs</div></div>`).join("");
+
+  const STEP = 0.7;
+  window.DURATION = 0.6 + STEP * data.length + 1.8;
+
+  window.render = (t) => {
+    const intro = ease.outCubic(prog(t, 0, 0.5));
+    $("#title").style.opacity = intro;
+    $(".legend").style.opacity = intro;
+    data.forEach((d, i) => {
+      const k = ease.outCubic(prog(t, 0.6 + i * STEP, 0.6 + i * STEP + 1.0));
+      const total = d.total * k, paid = Math.min(d.paid, total);
+      const hT = (total / max) * H, hP = (paid / max) * H;
+      $("#g" + i).style.height = hT + "px";
+      $("#p" + i).style.height = hP + "px";
+      const v = $("#v" + i);
+      v.textContent = "$" + fmt(total >= 1000 ? Math.round(total / 1000) : total) + (total >= 1000 ? "k" : "");
+      v.style.bottom = 70 + hT + 16 + "px";
+      v.style.opacity = prog(t, 0.6 + i * STEP, 0.6 + i * STEP + 0.2);
+      v.style.color = i === data.length - 1 ? "var(--green)" : "#fff";
+    });
+  };
+</script>
+</body></html>
