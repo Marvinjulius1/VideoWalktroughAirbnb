@@ -43,15 +43,19 @@
   $("#time").textContent = param("time", "jetzt");
   $("#note").style.top = num("top", 150) + "px";
 
-  const IN = 0.4, HOLD = num("hold", 3.0);
-  window.DURATION = IN + 0.7 + HOLD;
+  // Params (cont.): out (1 = fly back up at the end, 0 = stay)
+  const IN = 0.4, HOLD = num("hold", 2.5), OUT = num("out", 1) ? 0.45 : 0;
+  const T_OUT = IN + 0.7 + HOLD;
+  window.DURATION = T_OUT + OUT + (OUT ? 0.25 : 0);
 
   window.render = (t) => {
     // iOS-style drop from above the screen edge with a soft spring.
     const k = ease.outBack(prog(t, IN, IN + 0.65));
+    // Then it slides back up, accelerating like a dismissed banner.
+    const o = OUT ? Math.pow(prog(t, T_OUT, T_OUT + OUT), 2.2) : 0;
     const el = $("#note");
-    el.style.opacity = clamp(prog(t, IN, IN + 0.18));
-    el.style.transform = `translateY(${(1 - k) * -420}px) scale(${lerp(0.9, 1, clamp(k))})`;
+    el.style.opacity = clamp(prog(t, IN, IN + 0.18)) * (1 - clamp(prog(t, T_OUT + OUT * 0.6, T_OUT + OUT)));
+    el.style.transform = `translateY(${(1 - k) * -420 - o * 520}px) scale(${lerp(0.9, 1, clamp(k)) - o * 0.04})`;
   };
 </script>
 </body></html>

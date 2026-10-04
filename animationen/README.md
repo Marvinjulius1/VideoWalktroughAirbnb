@@ -12,7 +12,7 @@ HTML-Vorlagen im Apple-Stil, die Bild für Bild als 1080x1920-MP4 (9:16, 30 fps)
 | `notification` | iPhone-Benachrichtigungen | `preset` (payment, dividend, crypto, sales) oder `n1`–`n3` als `Titel\|Text\|Icon\|Farbe` |
 | `island` | Dynamic Island mit Betrag | `title`, `subtitle`, `amount`, `prefix`, `icon`, `color` |
 | `typing` | Tippfeld mit Senden | `text`, `placeholder`, `cps`, `send` |
-| `message` | eine Nachricht (WhatsApp/iMessage) fällt von oben rein, mehrzeilig | `app`, `sender`, `text`, `time`, `top`, `hold` |
+| `message` | eine Nachricht (WhatsApp/iMessage) fällt von oben rein, mehrzeilig | `app`, `sender`, `text`, `time`, `top`, `hold`, `out` (0 = bleibt stehen) |
 
 Alle Vorlagen kennen `bg=green` für eine Greenscreen-Variante und `bg=transparent` für einen echten durchsichtigen Hintergrund (Ausgabe als `.mov` in ProRes 4444 oder als `.webm`).
 
