@@ -1,0 +1,34 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Main,Inter ExtraBold,128,&H00FFFFFF,&H00FFFFFF,&H00000000,&H96000000,0,0,0,0,100,100,3,0,1,6,3,2,60,60,600,1
+Style: Hook,Inter ExtraBold,108,&H00FFFFFF,&H00FFFFFF,&H00000000,&H96000000,0,0,0,0,100,100,3,0,1,6,3,8,70,70,330,1
+Style: Big,Inter ExtraBold,210,&H0058D130,&H0058D130,&H00000000,&H96000000,0,0,0,0,100,100,6,0,1,9,4,2,40,40,60,1
+Style: Hinweis,Inter SemiBold,36,&H00C8C8C8,&H00C8C8C8,&H00000000,&H96000000,0,0,0,0,100,100,0,0,1,2,0,2,40,40,90,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:03.00,Hook,,0,0,0,,{\fad(250,200)}Nobody gets rich\Nsaving $100 a month.
+Dialogue: 0,0:00:03.10,0:00:03.85,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}That's what most people
+Dialogue: 0,0:00:03.85,0:00:05.00,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}think.
+Dialogue: 0,0:00:05.05,0:00:06.40,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}{\c&H58D130&}$100{\c&HFFFFFF&}
+Dialogue: 0,0:00:06.40,0:00:07.72,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}Every month
+Dialogue: 0,0:00:07.72,0:00:09.00,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}{\c&H58D130&}40 years{\c&HFFFFFF&}
+Dialogue: 0,0:00:19.05,0:00:20.00,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}Not talent.
+Dialogue: 0,0:00:20.05,0:00:21.00,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}Not luck.
+Dialogue: 0,0:00:21.10,0:00:22.00,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}{\c&H58D130&}Time.{\c&HFFFFFF&}
+Dialogue: 0,0:00:22.10,0:00:23.00,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}The rich didn't start
+Dialogue: 0,0:00:23.00,0:00:24.08,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}with more money.
+Dialogue: 0,0:00:24.08,0:00:25.00,Main,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}They started {\c&H58D130&}earlier.{\c&HFFFFFF&}
+Dialogue: 0,0:00:25.10,0:00:25.95,Main,,0,0,600,,{\an8}{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}So the question isn't
+Dialogue: 0,0:00:25.95,0:00:26.58,Main,,0,0,600,,{\an8}{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}if you can afford
+Dialogue: 0,0:00:26.58,0:00:27.81,Main,,0,0,600,,{\an8}{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}to invest...
+Dialogue: 0,0:00:27.81,0:00:28.34,Main,,0,0,600,,{\an8}{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}it's whether you can
+Dialogue: 0,0:00:28.34,0:00:28.75,Main,,0,0,600,,{\an8}{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}afford to
+Dialogue: 0,0:00:28.75,0:00:29.40,Big,,0,0,0,,{\fscx75\fscy75\t(0,90,\fscx100\fscy100)}WAIT.
+Dialogue: 0,0:00:09.00,0:00:28.75,Hinweis,,0,0,0,,Assumes 7% avg. annual return. Not financial advice.
