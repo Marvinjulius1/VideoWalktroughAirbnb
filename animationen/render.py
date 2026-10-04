@@ -27,6 +27,18 @@ TEMPLATES = Path(__file__).resolve().parent / "templates"
 CHROMIUM = os.environ.get("CHROMIUM_PATH", "/opt/pw-browsers/chromium")
 
 
+def codec(ziel, alpha):
+    """Encoder settings; bg=transparent keeps the alpha channel (.mov or .webm)."""
+    if alpha and ziel.endswith(".mov"):
+        return ["-c:v", "prores_ks", "-profile:v", "4444", "-pix_fmt", "yuva444p10le"]
+    if alpha and ziel.endswith(".webm"):
+        return ["-c:v", "libvpx-vp9", "-pix_fmt", "yuva420p", "-b:v", "0", "-crf", "20"]
+    if alpha:
+        sys.exit("bg=transparent braucht eine .mov- oder .webm-Ausgabe")
+    return ["-c:v", "libx264", "-preset", "medium", "-crf", "16",
+            "-pix_fmt", "yuv420p", "-movflags", "+faststart"]
+
+
 def render(template, ziel, params):
     url = (TEMPLATES / f"{template}.html").as_uri()
     if params:
@@ -42,15 +54,15 @@ def render(template, ziel, params):
         dauer = page.evaluate("window.DURATION")
         frames = round(dauer * FPS)
 
+        alpha = params.get("bg") == "transparent"
         ffmpeg = subprocess.Popen(
             ["ffmpeg", "-y", "-loglevel", "error", "-f", "image2pipe", "-framerate", str(FPS),
-             "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "16",
-             "-pix_fmt", "yuv420p", "-movflags", "+faststart", ziel],
+             "-i", "-", *codec(ziel, alpha), ziel],
             stdin=subprocess.PIPE,
         )
         for i in range(frames):
             page.evaluate(f"window.render({i / FPS})")
-            ffmpeg.stdin.write(page.screenshot(type="png"))
+            ffmpeg.stdin.write(page.screenshot(type="png", omit_background=alpha))
         ffmpeg.stdin.close()
         if ffmpeg.wait() != 0:
             sys.exit("ffmpeg fehlgeschlagen")

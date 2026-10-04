@@ -14,7 +14,7 @@ HTML-Vorlagen im Apple-Stil, die Bild für Bild als 1080x1920-MP4 (9:16, 30 fps)
 | `typing` | Tippfeld mit Senden | `text`, `placeholder`, `cps`, `send` |
 | `message` | eine Nachricht (WhatsApp/iMessage) fällt von oben rein, mehrzeilig | `app`, `sender`, `text`, `time`, `top`, `hold` |
 
-Alle Vorlagen kennen `bg=green` für eine Greenscreen-Variante.
+Alle Vorlagen kennen `bg=green` für eine Greenscreen-Variante und `bg=transparent` für einen echten durchsichtigen Hintergrund (Ausgabe als `.mov` in ProRes 4444 oder als `.webm`).
 
 ## Rendern
 

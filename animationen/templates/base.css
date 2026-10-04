@@ -30,3 +30,6 @@ html, body {
 
 /* Greenscreen variant for overlays: key out in CapCut with "Chroma key". */
 body.green { background: #00ff00; }
+
+/* Transparent variant: rendered with an alpha channel (ProRes 4444 / WebM). */
+html.transparent, body.transparent { background: transparent; }

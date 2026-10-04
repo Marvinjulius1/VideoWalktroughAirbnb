@@ -7,6 +7,10 @@ const param = (k, d) => (P.has(k) ? P.get(k) : d);
 const num = (k, d) => (P.has(k) ? parseFloat(P.get(k)) : d);
 
 if (param("bg", "dark") === "green") document.body.classList.add("green");
+if (param("bg", "dark") === "transparent") {
+  document.documentElement.classList.add("transparent");
+  document.body.classList.add("transparent");
+}
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 // Progress of t inside [a, b], clamped to 0..1.
