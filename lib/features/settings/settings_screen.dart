@@ -87,6 +87,7 @@ class SettingsScreen extends ConsumerWidget {
           SliverToBoxAdapter(
             child: LumenGroup(
               title: t.settingsGeneral,
+              footer: t.settingsAutoRefreshFooter,
               children: [
                 LumenListTile(
                   title: t.settingsLanguage,
@@ -94,6 +95,12 @@ class SettingsScreen extends ConsumerWidget {
                   trailing: Text(languageName(s.localeCode),
                       style: l.text.callout.copyWith(color: l.palette.textSecondary)),
                   onPressed: () => _pickLanguage(context, ref, languageName),
+                ),
+                LumenListTile(
+                  key: const Key('auto-refresh'),
+                  title: t.settingsAutoRefresh,
+                  leading: LucideIcons.rotateCw,
+                  trailing: Switch(value: s.autoRefresh, onChanged: ctrl.setAutoRefresh),
                 ),
                 if (!l.isTv)
                   LumenListTile(

@@ -15,6 +15,7 @@ class AppSettings {
     this.localeCode,
     this.haptics = true,
     this.onboardingDone = false,
+    this.autoRefresh = true,
   });
 
   /// Standard ist Dunkel (Design-Vorgabe), nicht System.
@@ -26,6 +27,9 @@ class AppSettings {
   final bool haptics;
   final bool onboardingDone;
 
+  /// Aktive Quelle beim Start automatisch neu laden, wenn sie veraltet ist.
+  final bool autoRefresh;
+
   Locale? get locale => localeCode == null ? null : Locale(localeCode!);
 
   AppSettings copyWith({
@@ -34,6 +38,7 @@ class AppSettings {
     String? Function()? localeCode,
     bool? haptics,
     bool? onboardingDone,
+    bool? autoRefresh,
   }) =>
       AppSettings(
         themeMode: themeMode ?? this.themeMode,
@@ -41,6 +46,7 @@ class AppSettings {
         localeCode: localeCode != null ? localeCode() : this.localeCode,
         haptics: haptics ?? this.haptics,
         onboardingDone: onboardingDone ?? this.onboardingDone,
+        autoRefresh: autoRefresh ?? this.autoRefresh,
       );
 
   Map<String, String> toEntries() => {
@@ -49,6 +55,7 @@ class AppSettings {
         'locale': localeCode ?? '',
         'haptics': '$haptics',
         'onboarding_done': '$onboardingDone',
+        'auto_refresh': '$autoRefresh',
       };
 
   factory AppSettings.fromEntries(Map<String, String> e) => AppSettings(
@@ -60,6 +67,7 @@ class AppSettings {
         localeCode: (e['locale']?.isEmpty ?? true) ? null : e['locale'],
         haptics: e['haptics'] != 'false',
         onboardingDone: e['onboarding_done'] == 'true',
+        autoRefresh: e['auto_refresh'] != 'false',
       );
 }
 
@@ -115,6 +123,7 @@ class SettingsController extends Notifier<AppSettings> {
   Future<void> setLocale(String? code) =>
       _set(state.copyWith(localeCode: () => code));
   Future<void> setHaptics(bool v) => _set(state.copyWith(haptics: v));
+  Future<void> setAutoRefresh(bool v) => _set(state.copyWith(autoRefresh: v));
   Future<void> completeOnboarding() =>
       _set(state.copyWith(onboardingDone: true));
 }

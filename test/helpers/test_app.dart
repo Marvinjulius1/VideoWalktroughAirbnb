@@ -2,13 +2,19 @@ import 'package:drift/drift.dart' show driftRuntimeOptions;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lumen/app/app.dart';
 import 'package:lumen/app/providers.dart';
 import 'package:lumen/core/db/database.dart';
 import 'package:lumen/core/platform/device_profile.dart';
 import 'package:lumen/core/security/secret_store.dart';
+import 'package:lumen/core/network/source_error.dart';
 import 'package:lumen/features/settings/settings.dart';
+import 'package:lumen/features/sources/data/xtream/xtream_models.dart';
+import 'package:lumen/features/sources/domain/source_profile.dart';
+import 'package:lumen/features/sync/sync_controller.dart';
+import 'package:dio/dio.dart';
 
 LumenDatabase memoryDb() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -19,12 +25,15 @@ LumenDatabase memoryDb() {
 /// Fake-Schlüsselbund und wählbare Startbedingungen.
 class TestHarness {
   TestHarness({
-    this.settings = const AppSettings(onboardingDone: true, localeCode: 'de'),
+    this.settings = const AppSettings(onboardingDone: true, localeCode: 'de', autoRefresh: false),
     this.device = const DeviceProfile(),
   });
 
   final AppSettings settings;
   final DeviceProfile device;
+
+  /// Ergebnis des Verbindungstests im Formular (`null` = erfolgreich).
+  SourceErrorKind? connectionError;
   final LumenDatabase db = memoryDb();
   final InMemorySecretStore secrets = InMemorySecretStore();
 
@@ -33,7 +42,12 @@ class TestHarness {
     secretStoreProvider.overrideWithValue(secrets),
     deviceProfileProvider.overrideWithValue(device),
     initialSettingsProvider.overrideWithValue(settings),
+    connectionTesterProvider.overrideWithValue(_FakeTester(this)),
+    ...extraOverrides,
   ]);
+
+  /// Für Tests, die z. B. einen echten Mock-Server einbinden.
+  List<Override> extraOverrides = [];
 
   Future<void> pump(WidgetTester tester, {Size size = const Size(390, 844)}) async {
     tester.view.physicalSize = size * 3;
@@ -68,3 +82,15 @@ extension FindText on CommonFinders {
 }
 
 Widget wrap(Widget child) => MaterialApp(home: child);
+
+class _FakeTester extends ConnectionTester {
+  _FakeTester(this.h) : super(Dio());
+
+  final TestHarness h;
+
+  @override
+  Future<XtreamAccount?> test(SourceType type, {String? server, required SourceCredentials creds}) async {
+    if (h.connectionError != null) throw SourceException(h.connectionError!);
+    return null;
+  }
+}

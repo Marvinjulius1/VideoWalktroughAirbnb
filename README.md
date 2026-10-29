@@ -15,7 +15,8 @@ Plan, Architektur und Design-Tokens: [`PLAN.md`](PLAN.md).
 |-------|--------|
 | 0 – Plan | ✅ |
 | 1 – Fundament (Design-System, Navigation, Onboarding, Quellen sicher speichern) | ✅ |
-| 2 – Daten (Xtream-Client, M3U-Parser, Datenbank, Sync) | als Nächstes |
+| 2 – Daten (Xtream-Client, M3U-Parser, Datenbank, Sync, Suche) | ✅ |
+| 3 – Live-TV und Player, EPG, Filme und Serien | als Nächstes |
 
 ## Auf dem Mac starten
 
@@ -69,6 +70,16 @@ Nach Änderungen an Texten (`lib/core/l10n/*.arb`):
 ```bash
 flutter gen-l10n
 ```
+
+## Ausprobieren ohne eigenen Anbieter
+
+Die Tests bringen einen lokalen Mock-Server mit erfundenen Daten mit
+(`test/mock_server/mock_server.dart`). Echte Anbieter-Daten gibt es im Repo
+nicht und wird es nicht geben.
+
+Messwerte aus den Tests (Linux-Rechner, nicht Handy):
+100.000 M3U-Einträge parsen ≈ 1 s; 50.000 Sender komplett laden
+(Parsen, Speichern, Suchindex) ≈ 1,7 s.
 
 ## Datenschutz
 

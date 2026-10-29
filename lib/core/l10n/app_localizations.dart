@@ -745,6 +745,294 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Schließen'**
   String get close;
+
+  /// No description provided for @errInvalidCredentials.
+  ///
+  /// In de, this message translates to:
+  /// **'Benutzername oder Passwort stimmen nicht.'**
+  String get errInvalidCredentials;
+
+  /// No description provided for @errInvalidCredentialsHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Prüfe Groß- und Kleinschreibung.'**
+  String get errInvalidCredentialsHint;
+
+  /// No description provided for @errAccountExpired.
+  ///
+  /// In de, this message translates to:
+  /// **'Dieser Zugang ist abgelaufen.'**
+  String get errAccountExpired;
+
+  /// No description provided for @errAccountExpiredHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Wende dich an deinen Anbieter, um ihn zu verlängern.'**
+  String get errAccountExpiredHint;
+
+  /// No description provided for @errAccountDisabled.
+  ///
+  /// In de, this message translates to:
+  /// **'Dieser Zugang ist gesperrt oder deaktiviert.'**
+  String get errAccountDisabled;
+
+  /// No description provided for @errAccountDisabledHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Wende dich an deinen Anbieter.'**
+  String get errAccountDisabledHint;
+
+  /// No description provided for @errServerUnreachable.
+  ///
+  /// In de, this message translates to:
+  /// **'Der Server ist nicht erreichbar.'**
+  String get errServerUnreachable;
+
+  /// No description provided for @errServerUnreachableHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Prüfe die Adresse inklusive Port und deine Internetverbindung.'**
+  String get errServerUnreachableHint;
+
+  /// No description provided for @errTimeout.
+  ///
+  /// In de, this message translates to:
+  /// **'Der Server antwortet nicht rechtzeitig.'**
+  String get errTimeout;
+
+  /// No description provided for @errTimeoutHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Versuche es gleich noch einmal.'**
+  String get errTimeoutHint;
+
+  /// No description provided for @errTls.
+  ///
+  /// In de, this message translates to:
+  /// **'Die sichere Verbindung ist fehlgeschlagen.'**
+  String get errTls;
+
+  /// No description provided for @errTlsHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Versuche die Adresse mit http:// statt https://.'**
+  String get errTlsHint;
+
+  /// No description provided for @errNotFound.
+  ///
+  /// In de, this message translates to:
+  /// **'Unter dieser Adresse wurde nichts gefunden.'**
+  String get errNotFound;
+
+  /// No description provided for @errNotFoundHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Prüfe die Adresse auf Tippfehler.'**
+  String get errNotFoundHint;
+
+  /// No description provided for @errInvalidResponse.
+  ///
+  /// In de, this message translates to:
+  /// **'Der Server hat unerwartet geantwortet.'**
+  String get errInvalidResponse;
+
+  /// No description provided for @errInvalidResponseHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Ist das wirklich die Adresse eines Xtream-Servers?'**
+  String get errInvalidResponseHint;
+
+  /// No description provided for @errInvalidPlaylist.
+  ///
+  /// In de, this message translates to:
+  /// **'Das ist keine gültige M3U-Playlist.'**
+  String get errInvalidPlaylist;
+
+  /// No description provided for @errInvalidPlaylistHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Prüfe die Adresse oder die Datei.'**
+  String get errInvalidPlaylistHint;
+
+  /// No description provided for @errUnknown.
+  ///
+  /// In de, this message translates to:
+  /// **'Etwas ist schiefgelaufen.'**
+  String get errUnknown;
+
+  /// No description provided for @errUnknownHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Versuche es noch einmal.'**
+  String get errUnknownHint;
+
+  /// No description provided for @testAndSave.
+  ///
+  /// In de, this message translates to:
+  /// **'Verbindung testen & speichern'**
+  String get testAndSave;
+
+  /// No description provided for @testing.
+  ///
+  /// In de, this message translates to:
+  /// **'Verbindung wird geprüft …'**
+  String get testing;
+
+  /// No description provided for @saveAnyway.
+  ///
+  /// In de, this message translates to:
+  /// **'Trotzdem speichern'**
+  String get saveAnyway;
+
+  /// No description provided for @retry.
+  ///
+  /// In de, this message translates to:
+  /// **'Erneut versuchen'**
+  String get retry;
+
+  /// No description provided for @syncConnecting.
+  ///
+  /// In de, this message translates to:
+  /// **'Verbinde …'**
+  String get syncConnecting;
+
+  /// No description provided for @syncCategories.
+  ///
+  /// In de, this message translates to:
+  /// **'Kategorien werden geladen …'**
+  String get syncCategories;
+
+  /// No description provided for @syncLive.
+  ///
+  /// In de, this message translates to:
+  /// **'Sender werden geladen …'**
+  String get syncLive;
+
+  /// No description provided for @syncVod.
+  ///
+  /// In de, this message translates to:
+  /// **'Filme werden geladen …'**
+  String get syncVod;
+
+  /// No description provided for @syncSeries.
+  ///
+  /// In de, this message translates to:
+  /// **'Serien werden geladen …'**
+  String get syncSeries;
+
+  /// No description provided for @syncSaving.
+  ///
+  /// In de, this message translates to:
+  /// **'Wird gespeichert …'**
+  String get syncSaving;
+
+  /// No description provided for @syncFailedTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Aktualisieren fehlgeschlagen'**
+  String get syncFailedTitle;
+
+  /// No description provided for @countsLine.
+  ///
+  /// In de, this message translates to:
+  /// **'{live} Sender · {vod} Filme · {series} Serien'**
+  String countsLine(int live, int vod, int series);
+
+  /// No description provided for @lastSynced.
+  ///
+  /// In de, this message translates to:
+  /// **'Aktualisiert {when}'**
+  String lastSynced(String when);
+
+  /// No description provided for @neverSynced.
+  ///
+  /// In de, this message translates to:
+  /// **'Noch nicht aktualisiert'**
+  String get neverSynced;
+
+  /// No description provided for @refreshNow.
+  ///
+  /// In de, this message translates to:
+  /// **'Jetzt aktualisieren'**
+  String get refreshNow;
+
+  /// No description provided for @settingsAutoRefresh.
+  ///
+  /// In de, this message translates to:
+  /// **'Beim Start aktualisieren'**
+  String get settingsAutoRefresh;
+
+  /// No description provided for @settingsAutoRefreshFooter.
+  ///
+  /// In de, this message translates to:
+  /// **'Lädt die Inhalte der aktiven Quelle neu, wenn sie älter als 12 Stunden sind.'**
+  String get settingsAutoRefreshFooter;
+
+  /// No description provided for @accountTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Konto'**
+  String get accountTitle;
+
+  /// No description provided for @accountStatus.
+  ///
+  /// In de, this message translates to:
+  /// **'Status'**
+  String get accountStatus;
+
+  /// No description provided for @accountExpires.
+  ///
+  /// In de, this message translates to:
+  /// **'Läuft ab'**
+  String get accountExpires;
+
+  /// No description provided for @accountUnlimited.
+  ///
+  /// In de, this message translates to:
+  /// **'Unbegrenzt'**
+  String get accountUnlimited;
+
+  /// No description provided for @accountConnections.
+  ///
+  /// In de, this message translates to:
+  /// **'Verbindungen'**
+  String get accountConnections;
+
+  /// No description provided for @accountCreated.
+  ///
+  /// In de, this message translates to:
+  /// **'Erstellt'**
+  String get accountCreated;
+
+  /// No description provided for @accountActive.
+  ///
+  /// In de, this message translates to:
+  /// **'Aktiv'**
+  String get accountActive;
+
+  /// No description provided for @accountTrial.
+  ///
+  /// In de, this message translates to:
+  /// **'Testzugang'**
+  String get accountTrial;
+
+  /// No description provided for @searchNoResults.
+  ///
+  /// In de, this message translates to:
+  /// **'Nichts gefunden für „{query}“'**
+  String searchNoResults(String query);
+
+  /// No description provided for @searchNoResultsBody.
+  ///
+  /// In de, this message translates to:
+  /// **'Versuche einen kürzeren oder anderen Begriff.'**
+  String get searchNoResultsBody;
+
+  /// No description provided for @justNow.
+  ///
+  /// In de, this message translates to:
+  /// **'gerade eben'**
+  String get justNow;
 }
 
 class _AppLocalizationsDelegate

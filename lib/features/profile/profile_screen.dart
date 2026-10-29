@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:lucide_icons_flutter/lucide_icons_600.dart';
 
@@ -10,7 +11,10 @@ import '../../core/design/tokens.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/widgets/lumen_card.dart';
 import '../../core/widgets/lumen_page.dart';
+import '../sources/domain/source_profile.dart';
 import '../sources/presentation/manage_sources_screen.dart';
+import '../sync/sync_controller.dart';
+import '../sync/sync_status_card.dart';
 
 /// Profil: aktive Quelle, Quellen verwalten, Einstellungen.
 /// Favoriten, Verlauf und Weiterschauen kommen in Phase 3 dazu.
@@ -48,6 +52,12 @@ class ProfileScreen extends ConsumerWidget {
                             color: context.lumen.palette.textSecondary)
                         : null,
                   ),
+                  const SizedBox(height: LumenSpace.sm),
+                  SyncStatusCard(profile: active),
+                  if (active.type == SourceType.xtream) ...[
+                    const SizedBox(height: LumenSpace.xl),
+                    _AccountGroup(profileId: active.id),
+                  ],
                 ],
               ),
             ),
@@ -114,4 +124,59 @@ class _Chevron extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Icon(LucideIcons.chevronRight,
       size: 18, color: context.lumen.palette.textSecondary);
+}
+
+/// Kontoinfo bei Xtream: Status, Ablaufdatum, Verbindungen, Erstellt am.
+class _AccountGroup extends ConsumerWidget {
+  const _AccountGroup({required this.profileId});
+
+  final String profileId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final info = ref.watch(accountInfoProvider(profileId)).value;
+    if (info == null) return const SizedBox.shrink();
+    final t = AppLocalizations.of(context);
+    final l = context.lumen;
+    final p = l.palette;
+    final date = DateFormat.yMMMd(Localizations.localeOf(context).toLanguageTag());
+    final status = info.status ?? '–';
+    final active = status.toLowerCase() == 'active';
+    final valueStyle = l.text.callout.copyWith(
+      color: p.textSecondary,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
+
+    Widget value(String s, {Color? color}) =>
+        Text(s, style: color == null ? valueStyle : valueStyle.copyWith(color: color));
+
+    return LumenGroup(
+      title: t.accountTitle,
+      children: [
+        LumenListTile(
+          title: t.accountStatus,
+          trailing: value(
+            [active ? t.accountActive : status, if (info.isTrial) t.accountTrial].join(' · '),
+            color: active ? p.success : p.error,
+          ),
+        ),
+        LumenListTile(
+          title: t.accountExpires,
+          trailing: value(info.expiresAt == null
+              ? t.accountUnlimited
+              : date.format(info.expiresAt!.toLocal())),
+        ),
+        if (info.maxConnections != null)
+          LumenListTile(
+            title: t.accountConnections,
+            trailing: value('${info.activeConnections ?? 0} / ${info.maxConnections}'),
+          ),
+        if (info.createdAt != null)
+          LumenListTile(
+            title: t.accountCreated,
+            trailing: value(date.format(info.createdAt!.toLocal())),
+          ),
+      ],
+    );
+  }
 }

@@ -349,4 +349,173 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get close => 'Schließen';
+
+  @override
+  String get errInvalidCredentials =>
+      'Benutzername oder Passwort stimmen nicht.';
+
+  @override
+  String get errInvalidCredentialsHint => 'Prüfe Groß- und Kleinschreibung.';
+
+  @override
+  String get errAccountExpired => 'Dieser Zugang ist abgelaufen.';
+
+  @override
+  String get errAccountExpiredHint =>
+      'Wende dich an deinen Anbieter, um ihn zu verlängern.';
+
+  @override
+  String get errAccountDisabled =>
+      'Dieser Zugang ist gesperrt oder deaktiviert.';
+
+  @override
+  String get errAccountDisabledHint => 'Wende dich an deinen Anbieter.';
+
+  @override
+  String get errServerUnreachable => 'Der Server ist nicht erreichbar.';
+
+  @override
+  String get errServerUnreachableHint =>
+      'Prüfe die Adresse inklusive Port und deine Internetverbindung.';
+
+  @override
+  String get errTimeout => 'Der Server antwortet nicht rechtzeitig.';
+
+  @override
+  String get errTimeoutHint => 'Versuche es gleich noch einmal.';
+
+  @override
+  String get errTls => 'Die sichere Verbindung ist fehlgeschlagen.';
+
+  @override
+  String get errTlsHint => 'Versuche die Adresse mit http:// statt https://.';
+
+  @override
+  String get errNotFound => 'Unter dieser Adresse wurde nichts gefunden.';
+
+  @override
+  String get errNotFoundHint => 'Prüfe die Adresse auf Tippfehler.';
+
+  @override
+  String get errInvalidResponse => 'Der Server hat unerwartet geantwortet.';
+
+  @override
+  String get errInvalidResponseHint =>
+      'Ist das wirklich die Adresse eines Xtream-Servers?';
+
+  @override
+  String get errInvalidPlaylist => 'Das ist keine gültige M3U-Playlist.';
+
+  @override
+  String get errInvalidPlaylistHint => 'Prüfe die Adresse oder die Datei.';
+
+  @override
+  String get errUnknown => 'Etwas ist schiefgelaufen.';
+
+  @override
+  String get errUnknownHint => 'Versuche es noch einmal.';
+
+  @override
+  String get testAndSave => 'Verbindung testen & speichern';
+
+  @override
+  String get testing => 'Verbindung wird geprüft …';
+
+  @override
+  String get saveAnyway => 'Trotzdem speichern';
+
+  @override
+  String get retry => 'Erneut versuchen';
+
+  @override
+  String get syncConnecting => 'Verbinde …';
+
+  @override
+  String get syncCategories => 'Kategorien werden geladen …';
+
+  @override
+  String get syncLive => 'Sender werden geladen …';
+
+  @override
+  String get syncVod => 'Filme werden geladen …';
+
+  @override
+  String get syncSeries => 'Serien werden geladen …';
+
+  @override
+  String get syncSaving => 'Wird gespeichert …';
+
+  @override
+  String get syncFailedTitle => 'Aktualisieren fehlgeschlagen';
+
+  @override
+  String countsLine(int live, int vod, int series) {
+    final intl.NumberFormat liveNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String liveString = liveNumberFormat.format(live);
+    final intl.NumberFormat vodNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String vodString = vodNumberFormat.format(vod);
+    final intl.NumberFormat seriesNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String seriesString = seriesNumberFormat.format(series);
+
+    return '$liveString Sender · $vodString Filme · $seriesString Serien';
+  }
+
+  @override
+  String lastSynced(String when) {
+    return 'Aktualisiert $when';
+  }
+
+  @override
+  String get neverSynced => 'Noch nicht aktualisiert';
+
+  @override
+  String get refreshNow => 'Jetzt aktualisieren';
+
+  @override
+  String get settingsAutoRefresh => 'Beim Start aktualisieren';
+
+  @override
+  String get settingsAutoRefreshFooter =>
+      'Lädt die Inhalte der aktiven Quelle neu, wenn sie älter als 12 Stunden sind.';
+
+  @override
+  String get accountTitle => 'Konto';
+
+  @override
+  String get accountStatus => 'Status';
+
+  @override
+  String get accountExpires => 'Läuft ab';
+
+  @override
+  String get accountUnlimited => 'Unbegrenzt';
+
+  @override
+  String get accountConnections => 'Verbindungen';
+
+  @override
+  String get accountCreated => 'Erstellt';
+
+  @override
+  String get accountActive => 'Aktiv';
+
+  @override
+  String get accountTrial => 'Testzugang';
+
+  @override
+  String searchNoResults(String query) {
+    return 'Nichts gefunden für „$query“';
+  }
+
+  @override
+  String get searchNoResultsBody =>
+      'Versuche einen kürzeren oder anderen Begriff.';
+
+  @override
+  String get justNow => 'gerade eben';
 }

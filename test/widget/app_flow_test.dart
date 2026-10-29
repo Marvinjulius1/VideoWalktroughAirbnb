@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lumen/app/providers.dart';
+import 'package:lumen/core/network/source_error.dart';
 import 'package:lumen/core/platform/device_profile.dart';
 import 'package:lumen/features/settings/settings.dart';
 import 'package:lumen/features/sources/data/sources_repository.dart';
@@ -103,9 +104,44 @@ void main() {
     expect(rows.single.type, SourceType.xtream);
     expect(h.secrets.values[SourcesRepository.secretKey(rows.single.id)], contains('geheim'));
 
-    // Zurück auf Start mit aktiver Quelle.
-    expect(find.text('Bereit für deine Inhalte'), findsOneWidget);
+    // Zurück auf Start mit aktiver Quelle. (Das automatische Laden schlägt
+    // im Test fehl, weil Flutter-Tests echte HTTP-Anfragen blockieren.)
     expect(find.text('Wohnzimmer'), findsOneWidget);
+    expect(find.byKey(const Key('sync-error')).evaluate().isNotEmpty ||
+        find.byKey(const Key('sync-running')).evaluate().isNotEmpty, isTrue);
+  });
+
+  testWidgets('Fehlgeschlagener Verbindungstest: Meldung, nichts gespeichert, „Trotzdem speichern“',
+      (tester) async {
+    final h = TestHarness()..connectionError = SourceErrorKind.invalidCredentials;
+    await h.pump(tester);
+    await settle(tester);
+    await tester.tap(find.text('Quelle hinzufügen'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('add-xtream')));
+    await tester.pumpAndSettle();
+
+    Future<void> enter(String key, String value) => tester.enterText(
+        find.descendant(of: find.byKey(Key(key)), matching: find.byType(TextFormField)), value);
+    await enter('field-name', 'Küche');
+    await enter('field-server', 'server.example');
+    await enter('field-username', 'nutzer');
+    await enter('field-password', 'falsch');
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('save-source')));
+    await tester.tap(find.byKey(const Key('save-source')));
+    await settle(tester);
+
+    expect(find.byKey(const Key('connection-error')), findsOneWidget);
+    expect(find.text('Benutzername oder Passwort stimmen nicht.'), findsOneWidget);
+    expect(await h.db.select(h.db.profiles).get(), isEmpty);
+
+    await tester.dragUntilVisible(find.byKey(const Key('save-anyway')),
+        find.byType(CustomScrollView), const Offset(0, -200));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('save-anyway')));
+    await settle(tester);
+    expect((await h.db.select(h.db.profiles).get()).single.name, 'Küche');
   });
 
   testWidgets('Einstellungen enthalten den Inhaltshinweis', (tester) async {

@@ -347,4 +347,169 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get close => 'Close';
+
+  @override
+  String get errInvalidCredentials => 'Username or password is incorrect.';
+
+  @override
+  String get errInvalidCredentialsHint => 'Check upper and lower case.';
+
+  @override
+  String get errAccountExpired => 'This access has expired.';
+
+  @override
+  String get errAccountExpiredHint => 'Contact your provider to renew it.';
+
+  @override
+  String get errAccountDisabled => 'This access is blocked or disabled.';
+
+  @override
+  String get errAccountDisabledHint => 'Contact your provider.';
+
+  @override
+  String get errServerUnreachable => 'The server can’t be reached.';
+
+  @override
+  String get errServerUnreachableHint =>
+      'Check the address including the port, and your internet connection.';
+
+  @override
+  String get errTimeout => 'The server is taking too long to respond.';
+
+  @override
+  String get errTimeoutHint => 'Please try again in a moment.';
+
+  @override
+  String get errTls => 'The secure connection failed.';
+
+  @override
+  String get errTlsHint => 'Try the address with http:// instead of https://.';
+
+  @override
+  String get errNotFound => 'Nothing was found at this address.';
+
+  @override
+  String get errNotFoundHint => 'Check the address for typos.';
+
+  @override
+  String get errInvalidResponse => 'The server responded unexpectedly.';
+
+  @override
+  String get errInvalidResponseHint =>
+      'Is this really the address of an Xtream server?';
+
+  @override
+  String get errInvalidPlaylist => 'This isn’t a valid M3U playlist.';
+
+  @override
+  String get errInvalidPlaylistHint => 'Check the address or the file.';
+
+  @override
+  String get errUnknown => 'Something went wrong.';
+
+  @override
+  String get errUnknownHint => 'Please try again.';
+
+  @override
+  String get testAndSave => 'Test connection & save';
+
+  @override
+  String get testing => 'Checking connection …';
+
+  @override
+  String get saveAnyway => 'Save anyway';
+
+  @override
+  String get retry => 'Try again';
+
+  @override
+  String get syncConnecting => 'Connecting …';
+
+  @override
+  String get syncCategories => 'Loading categories …';
+
+  @override
+  String get syncLive => 'Loading channels …';
+
+  @override
+  String get syncVod => 'Loading movies …';
+
+  @override
+  String get syncSeries => 'Loading series …';
+
+  @override
+  String get syncSaving => 'Saving …';
+
+  @override
+  String get syncFailedTitle => 'Refresh failed';
+
+  @override
+  String countsLine(int live, int vod, int series) {
+    final intl.NumberFormat liveNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String liveString = liveNumberFormat.format(live);
+    final intl.NumberFormat vodNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String vodString = vodNumberFormat.format(vod);
+    final intl.NumberFormat seriesNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String seriesString = seriesNumberFormat.format(series);
+
+    return '$liveString channels · $vodString movies · $seriesString series';
+  }
+
+  @override
+  String lastSynced(String when) {
+    return 'Updated $when';
+  }
+
+  @override
+  String get neverSynced => 'Not refreshed yet';
+
+  @override
+  String get refreshNow => 'Refresh now';
+
+  @override
+  String get settingsAutoRefresh => 'Refresh on launch';
+
+  @override
+  String get settingsAutoRefreshFooter =>
+      'Reloads the active source’s content when it is older than 12 hours.';
+
+  @override
+  String get accountTitle => 'Account';
+
+  @override
+  String get accountStatus => 'Status';
+
+  @override
+  String get accountExpires => 'Expires';
+
+  @override
+  String get accountUnlimited => 'Unlimited';
+
+  @override
+  String get accountConnections => 'Connections';
+
+  @override
+  String get accountCreated => 'Created';
+
+  @override
+  String get accountActive => 'Active';
+
+  @override
+  String get accountTrial => 'Trial';
+
+  @override
+  String searchNoResults(String query) {
+    return 'Nothing found for “$query”';
+  }
+
+  @override
+  String get searchNoResultsBody => 'Try a shorter or different term.';
+
+  @override
+  String get justNow => 'just now';
 }

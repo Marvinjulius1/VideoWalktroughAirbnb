@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +14,11 @@ import '../../../core/widgets/lumen_button.dart';
 import '../../../core/widgets/lumen_card.dart';
 import '../../../core/widgets/lumen_page.dart';
 import '../../../core/widgets/lumen_text_field.dart';
+import '../../../core/network/source_error.dart';
+import '../../sync/error_text.dart';
+import '../../sync/sync_controller.dart';
 import '../data/playlist_file_store.dart';
+import '../data/xtream/xtream_models.dart';
 import '../domain/source_profile.dart';
 import '../domain/url_validation.dart';
 import 'source_type_ui.dart';
@@ -47,6 +53,7 @@ class _SourceFormScreenState extends ConsumerState<SourceFormScreen> {
   String? _pickedName;
   String? _fileError;
   bool _saving = false;
+  SourceErrorKind? _connError;
   bool _loading = false;
 
   bool get _isEdit => widget.editId != null;
@@ -116,8 +123,9 @@ class _SourceFormScreenState extends ConsumerState<SourceFormScreen> {
     });
   }
 
-  Future<void> _save() async {
+  Future<void> _save({bool skipTest = false}) async {
     final t = AppLocalizations.of(context);
+    setState(() => _connError = null);
     final formOk = _form.currentState!.validate();
     final needsFile = widget.type == SourceType.m3uFile &&
         _pickedPath == null &&
@@ -147,8 +155,30 @@ class _SourceFormScreenState extends ConsumerState<SourceFormScreen> {
           ? normalizeServerUrl(_server.text).url
           : null;
 
+      // Verbindungstest, bevor gespeichert wird. Bei Fehlern bleibt das
+      // Formular offen und zeigt eine verständliche Meldung.
+      XtreamAccount? account;
+      if (!skipTest) {
+        try {
+          account = await ref
+              .read(connectionTesterProvider)
+              .test(widget.type, server: server, creds: creds);
+        } on SourceException catch (e) {
+          if (newFile != null) await files.remove(newFile);
+          if (mounted) setState(() => _connError = e.kind);
+          return;
+        }
+      }
+
+      final SourceProfile saved;
       if (_existing != null) {
         final old = _existing!;
+        saved = old.copyWith(
+          name: _name.text,
+          serverUrl: server,
+          localPath: newFile,
+          localFileName: newFile != null ? _pickedName : null,
+        );
         await repo.update(
           old.copyWith(
             name: _name.text,
@@ -160,7 +190,7 @@ class _SourceFormScreenState extends ConsumerState<SourceFormScreen> {
         );
         if (newFile != null) await files.remove(old.localPath);
       } else {
-        await repo.add(
+        saved = await repo.add(
           name: _name.text,
           type: widget.type,
           credentials: creds,
@@ -169,6 +199,12 @@ class _SourceFormScreenState extends ConsumerState<SourceFormScreen> {
           localFileName: newFile != null ? _pickedName : null,
         );
       }
+      if (account != null) {
+        await ref.read(contentStoreProvider).saveAccount(saved.id, account);
+      }
+      // Inhalte im Hintergrund laden; die Startseite zeigt den Fortschritt.
+      final fresh = await repo.byId(saved.id);
+      if (fresh != null) unawaited(ref.read(syncControllerProvider.notifier).syncNow(fresh));
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.sourceSaved)));
       if (_isEdit) {
@@ -260,12 +296,24 @@ class _SourceFormScreenState extends ConsumerState<SourceFormScreen> {
           ],
       },
       const SizedBox(height: LumenSpace.xxl),
+      if (_connError != null) ...[
+        _ConnectionErrorCard(kind: _connError!),
+        const SizedBox(height: LumenSpace.md),
+      ],
       LumenButton(
         key: const Key('save-source'),
-        label: t.save,
+        label: widget.type == SourceType.m3uFile ? t.save : t.testAndSave,
         loading: _saving,
         onPressed: _save,
       ),
+      if (_connError != null) ...[
+        const SizedBox(height: LumenSpace.sm),
+        LumenButton.secondary(
+          key: const Key('save-anyway'),
+          label: t.saveAnyway,
+          onPressed: _saving ? null : () => _save(skipTest: true),
+        ),
+      ],
     ];
 
     return Scaffold(
@@ -358,6 +406,49 @@ class _FilePickerTile extends StatelessWidget {
             child: Text(error!, style: l.text.footnote.copyWith(color: p.error)),
           ),
       ],
+    );
+  }
+}
+
+/// Fehler beim Verbindungstest: was passiert ist und was man tun kann.
+class _ConnectionErrorCard extends StatelessWidget {
+  const _ConnectionErrorCard({required this.kind});
+
+  final SourceErrorKind kind;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    final l = context.lumen;
+    final p = l.palette;
+    final (title, hint) = sourceErrorText(t, kind);
+    return Semantics(
+      liveRegion: true,
+      child: Container(
+        key: const Key('connection-error'),
+        padding: const EdgeInsets.all(LumenSpace.md),
+        decoration: BoxDecoration(
+          color: p.error.withValues(alpha: 0.12),
+          borderRadius: LumenRadius.mdAll,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(LucideIcons.circleAlert, color: p.error),
+            const SizedBox(width: LumenSpace.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: l.text.headline.copyWith(color: p.textPrimary)),
+                  const SizedBox(height: 2),
+                  Text(hint, style: l.text.footnote.copyWith(color: p.textSecondary)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

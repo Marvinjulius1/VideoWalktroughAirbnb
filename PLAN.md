@@ -372,6 +372,25 @@ Jede Phase wird in kleinen Commits umgesetzt, nach jedem Schritt `flutter analyz
 
 ---
 
+## 12a. Stand nach Phase 2 – Erkenntnisse
+
+- **Isolates:** Closures für `Isolate.run` werden in statischen Funktionen
+  erzeugt. Eine Closure in einer `async`-Methode fängt sonst den ganzen
+  Methodenkontext ein (inkl. Dio-Client) und lässt sich nicht an ein
+  Isolate senden.
+- **Parsen + Umwandeln in einem Isolate:** Das Ergebnis kommt per
+  `Isolate.exit` ohne Kopie zurück. Kopiert wird nur noch beim Senden der
+  Zeilen an die Datenbank (Pakete à 2.000, damit die UI dazwischen Luft hat).
+- **Offen / auf Gerät messen:** Ruckelt der Import großer Listen auf
+  schwachen Fire-TV-Sticks, schreiben wir die Datenbank direkt aus dem
+  Hintergrund-Isolate (Drift `shareAcrossIsolates`).
+- **M3U-Serien:** Jede Serien-Zeile einer M3U ist meist *eine Episode*.
+  Das Zusammenfassen zu Serien/Staffeln (z. B. „S01 E02“ erkennen) kommt in
+  Phase 3c.
+- **Film-/Seriendetails** (`get_vod_info`, `get_series_info`) sind im Client
+  fertig und getestet; das Zwischenspeichern in der Datenbank folgt mit den
+  Detailseiten in Phase 3c.
+
 ## 13. Entscheidungen (Antworten aus Phase 0)
 
 | Thema | Entscheidung |

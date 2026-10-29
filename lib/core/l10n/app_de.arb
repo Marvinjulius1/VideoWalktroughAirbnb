@@ -124,5 +124,83 @@
         "type": "int"
       }
     }
+  },
+  "errInvalidCredentials": "Benutzername oder Passwort stimmen nicht.",
+  "errInvalidCredentialsHint": "Prüfe Groß- und Kleinschreibung.",
+  "errAccountExpired": "Dieser Zugang ist abgelaufen.",
+  "errAccountExpiredHint": "Wende dich an deinen Anbieter, um ihn zu verlängern.",
+  "errAccountDisabled": "Dieser Zugang ist gesperrt oder deaktiviert.",
+  "errAccountDisabledHint": "Wende dich an deinen Anbieter.",
+  "errServerUnreachable": "Der Server ist nicht erreichbar.",
+  "errServerUnreachableHint": "Prüfe die Adresse inklusive Port und deine Internetverbindung.",
+  "errTimeout": "Der Server antwortet nicht rechtzeitig.",
+  "errTimeoutHint": "Versuche es gleich noch einmal.",
+  "errTls": "Die sichere Verbindung ist fehlgeschlagen.",
+  "errTlsHint": "Versuche die Adresse mit http:// statt https://.",
+  "errNotFound": "Unter dieser Adresse wurde nichts gefunden.",
+  "errNotFoundHint": "Prüfe die Adresse auf Tippfehler.",
+  "errInvalidResponse": "Der Server hat unerwartet geantwortet.",
+  "errInvalidResponseHint": "Ist das wirklich die Adresse eines Xtream-Servers?",
+  "errInvalidPlaylist": "Das ist keine gültige M3U-Playlist.",
+  "errInvalidPlaylistHint": "Prüfe die Adresse oder die Datei.",
+  "errUnknown": "Etwas ist schiefgelaufen.",
+  "errUnknownHint": "Versuche es noch einmal.",
+  "testAndSave": "Verbindung testen & speichern",
+  "testing": "Verbindung wird geprüft …",
+  "saveAnyway": "Trotzdem speichern",
+  "retry": "Erneut versuchen",
+  "syncConnecting": "Verbinde …",
+  "syncCategories": "Kategorien werden geladen …",
+  "syncLive": "Sender werden geladen …",
+  "syncVod": "Filme werden geladen …",
+  "syncSeries": "Serien werden geladen …",
+  "syncSaving": "Wird gespeichert …",
+  "syncFailedTitle": "Aktualisieren fehlgeschlagen",
+  "countsLine": "{live} Sender · {vod} Filme · {series} Serien",
+  "lastSynced": "Aktualisiert {when}",
+  "neverSynced": "Noch nicht aktualisiert",
+  "refreshNow": "Jetzt aktualisieren",
+  "settingsAutoRefresh": "Beim Start aktualisieren",
+  "settingsAutoRefreshFooter": "Lädt die Inhalte der aktiven Quelle neu, wenn sie älter als 12 Stunden sind.",
+  "accountTitle": "Konto",
+  "accountStatus": "Status",
+  "accountExpires": "Läuft ab",
+  "accountUnlimited": "Unbegrenzt",
+  "accountConnections": "Verbindungen",
+  "accountCreated": "Erstellt",
+  "accountActive": "Aktiv",
+  "accountTrial": "Testzugang",
+  "searchNoResults": "Nichts gefunden für „{query}“",
+  "searchNoResultsBody": "Versuche einen kürzeren oder anderen Begriff.",
+  "justNow": "gerade eben",
+  "@countsLine": {
+    "placeholders": {
+      "live": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "vod": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "series": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "@lastSynced": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "@searchNoResults": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
   }
 }

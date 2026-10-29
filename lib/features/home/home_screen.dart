@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:lucide_icons_flutter/lucide_icons_300.dart';
 
 import '../../app/providers.dart';
-import '../../core/design/theme.dart';
-import '../../core/design/tokens.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/widgets/empty_state.dart';
-import '../../core/widgets/lumen_card.dart';
 import '../../core/widgets/lumen_page.dart';
+import '../sync/sync_status_card.dart';
 
 /// Begrüßung je nach Tageszeit.
 String greetingFor(DateTime now, AppLocalizations t) {
@@ -21,8 +18,8 @@ String greetingFor(DateTime now, AppLocalizations t) {
   return t.greetingNight;
 }
 
-/// Ruhige Startseite. Reihen (Weiterschauen, Jetzt live, Favoriten,
-/// Neuzugänge) werden ab Phase 2/3 mit echten Daten gefüllt.
+/// Ruhige Startseite. Zeigt den Ladezustand der aktiven Quelle. Die Reihen
+/// (Weiterschauen, Jetzt live, Favoriten, Neuzugänge) kommen in Phase 3.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key, this.clock = DateTime.now});
 
@@ -31,7 +28,6 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = AppLocalizations.of(context);
-    final l = context.lumen;
     final active = ref.watch(activeSourceProvider);
     final greeting = greetingFor(clock(), t);
 
@@ -54,30 +50,7 @@ class HomeScreen extends ConsumerWidget {
       title: greeting,
       subtitle: active.name,
       slivers: [
-        SliverToBoxAdapter(
-          child: LumenCard(
-            padding: const EdgeInsets.all(LumenSpace.xl),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(LucideIcons.sparkles, color: l.accent, size: l.isTv ? 40 : 28),
-                const SizedBox(width: LumenSpace.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(t.homeNotSyncedTitle,
-                          style: l.text.headline.copyWith(color: l.palette.textPrimary)),
-                      const SizedBox(height: LumenSpace.xxs),
-                      Text(t.homeNotSyncedBody,
-                          style: l.text.callout.copyWith(color: l.palette.textSecondary)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        SliverToBoxAdapter(child: SyncStatusCard(profile: active)),
       ],
     );
   }
