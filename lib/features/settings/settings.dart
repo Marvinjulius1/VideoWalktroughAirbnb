@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../app/providers.dart';
+import '../../core/db/database.dart';
+import '../../core/design/haptics.dart';
+import '../../core/design/tokens.dart';
+
+/// Alle App-Einstellungen in einem unveränderlichen Objekt.
+@immutable
+class AppSettings {
+  const AppSettings({
+    this.themeMode = ThemeMode.dark,
+    this.accent = LumenAccent.blue,
+    this.localeCode,
+    this.haptics = true,
+    this.onboardingDone = false,
+  });
+
+  /// Standard ist Dunkel (Design-Vorgabe), nicht System.
+  final ThemeMode themeMode;
+  final LumenAccent accent;
+
+  /// `null` = Systemsprache.
+  final String? localeCode;
+  final bool haptics;
+  final bool onboardingDone;
+
+  Locale? get locale => localeCode == null ? null : Locale(localeCode!);
+
+  AppSettings copyWith({
+    ThemeMode? themeMode,
+    LumenAccent? accent,
+    String? Function()? localeCode,
+    bool? haptics,
+    bool? onboardingDone,
+  }) =>
+      AppSettings(
+        themeMode: themeMode ?? this.themeMode,
+        accent: accent ?? this.accent,
+        localeCode: localeCode != null ? localeCode() : this.localeCode,
+        haptics: haptics ?? this.haptics,
+        onboardingDone: onboardingDone ?? this.onboardingDone,
+      );
+
+  Map<String, String> toEntries() => {
+        'theme_mode': themeMode.name,
+        'accent': accent.name,
+        'locale': localeCode ?? '',
+        'haptics': '$haptics',
+        'onboarding_done': '$onboardingDone',
+      };
+
+  factory AppSettings.fromEntries(Map<String, String> e) => AppSettings(
+        themeMode: ThemeMode.values.firstWhere(
+          (m) => m.name == e['theme_mode'],
+          orElse: () => ThemeMode.dark,
+        ),
+        accent: LumenAccent.fromName(e['accent']),
+        localeCode: (e['locale']?.isEmpty ?? true) ? null : e['locale'],
+        haptics: e['haptics'] != 'false',
+        onboardingDone: e['onboarding_done'] == 'true',
+      );
+}
+
+class SettingsRepository {
+  SettingsRepository(this._db);
+
+  final LumenDatabase _db;
+
+  Future<AppSettings> load() async {
+    final rows = await _db.select(_db.settings).get();
+    return AppSettings.fromEntries({for (final r in rows) r.key: r.value});
+  }
+
+  Future<void> save(AppSettings s) => _db.batch((b) {
+        b.insertAllOnConflictUpdate(
+          _db.settings,
+          [
+            for (final e in s.toEntries().entries)
+              SettingsCompanion.insert(key: e.key, value: e.value),
+          ],
+        );
+      });
+}
+
+final settingsRepositoryProvider = Provider<SettingsRepository>(
+  (ref) => SettingsRepository(ref.watch(databaseProvider)),
+);
+
+/// Beim Start geladene Einstellungen (in `main` überschrieben), damit die
+/// App ohne Flackern direkt im richtigen Modus startet.
+final initialSettingsProvider =
+    Provider<AppSettings>((ref) => const AppSettings());
+
+final settingsProvider =
+    NotifierProvider<SettingsController, AppSettings>(SettingsController.new);
+
+class SettingsController extends Notifier<AppSettings> {
+  @override
+  AppSettings build() {
+    final s = ref.watch(initialSettingsProvider);
+    LumenHaptics.enabled = s.haptics;
+    return s;
+  }
+
+  Future<void> _set(AppSettings s) async {
+    state = s;
+    LumenHaptics.enabled = s.haptics;
+    await ref.read(settingsRepositoryProvider).save(s);
+  }
+
+  Future<void> setThemeMode(ThemeMode m) => _set(state.copyWith(themeMode: m));
+  Future<void> setAccent(LumenAccent a) => _set(state.copyWith(accent: a));
+  Future<void> setLocale(String? code) =>
+      _set(state.copyWith(localeCode: () => code));
+  Future<void> setHaptics(bool v) => _set(state.copyWith(haptics: v));
+  Future<void> completeOnboarding() =>
+      _set(state.copyWith(onboardingDone: true));
+}
