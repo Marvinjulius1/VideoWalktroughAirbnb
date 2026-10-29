@@ -3,7 +3,7 @@
 > Arbeitstitel: **Lumen**. Ein neutraler IPTV-Player für Android, Android TV, Fire TV und iOS.
 > Lumen liefert **keine Inhalte**. Nutzer tragen ihre eigenen Quellen ein (Xtream Codes, M3U-URL, M3U-Datei).
 
-Stand: Phase 0 (Planung, noch kein Code). Offene Rückfragen stehen am Ende (Abschnitt 13).
+Stand: Phase 0 abgeschlossen, Entscheidungen siehe Abschnitt 13.
 
 ---
 
@@ -16,7 +16,7 @@ Stand: Phase 0 (Planung, noch kein Code). Offene Rückfragen stehen am Ende (Abs
 | 3 | Inhaltshinweis | Auf dem letzten Onboarding-Screen (Pflicht-Bestätigung) und unter Einstellungen → Info: *„Diese App enthält keine Inhalte. Du bist selbst dafür verantwortlich, nur Quellen zu verwenden, zu deren Nutzung du berechtigt bist.“* |
 | 4 | Keine Werbung für illegale Nutzung | Store-Texte und Screenshots nur mit eigenen, legalen Testinhalten (z. B. öffentliche HLS-Testvideos, selbst gebaute Mock-Kanäle mit Fantasienamen). Keine Wörter wie „kostenlos Sky/DAZN“, „10.000 Sender“ usw. |
 | 5 | Datenschutz | Zugangsdaten nur lokal, verschlüsselt (`flutter_secure_storage` → iOS Keychain / Android Keystore). Keine Analytics, kein Crash-Reporting-Dienst, keine eigenen Server in v1. Datenschutzerklärung als Entwurf in `docs/legal/PRIVACY_de.md` + `_en.md`. |
-| 6 | Store-Vorbereitung | `docs/store/` mit Data-Safety (Google), App Privacy (Apple), Altersfreigabe-Fragebögen, Review-Notizen. **Hinweis:** Apple und Google prüfen IPTV-Player streng (Apple Guideline 5.2.3 „Audio/Video Downloading“ und 5.2 „Intellectual Property“, Google Policy „Intellectual Property“). **Vor der Einreichung lässt du einen Anwalt draufschauen** – steht so auch in `RELEASE.md`. |
+| 6 | Store-Vorbereitung (**zurückgestellt**, erst nach Phase 5 auf deine Ansage) | Später `docs/store/` mit Data-Safety (Google), App Privacy (Apple), Altersfreigabe-Fragebögen, Review-Notizen. **Hinweis:** Apple und Google prüfen IPTV-Player streng (Apple Guideline 5.2.3 „Audio/Video Downloading“ und 5.2 „Intellectual Property“, Google Policy „Intellectual Property“). **Vor der Einreichung lässt du einen Anwalt draufschauen** – steht so auch in `RELEASE.md`. |
 
 ---
 
@@ -100,7 +100,7 @@ abstract interface class SourceProvider {
 ## 4. Ordnerstruktur
 
 ```
-lumen/
+(Repo-Wurzel)
 ├── PLAN.md  RELEASE.md  README.md  analysis_options.yaml  pubspec.yaml
 ├── assets/
 │   ├── fonts/Inter/…            (OFL-Lizenz liegt bei)
@@ -247,7 +247,7 @@ Zentral in `lib/core/design/tokens.dart` (+ Dokumentation in `docs/design/tokens
 | `textPrimary` | `#FFFFFF` | `#000000` |
 | `textSecondary` | `#FFFFFF` 64 % (≈ `#A3A3A3`) | `#3C3C43` 64 % |
 | `textTertiary` | `#FFFFFF` 40 % | `#3C3C43` 40 % (nur für Deko, nicht für Pflichttext → WCAG) |
-| `accent` (Standard) | `#0A84FF` Blau | `#007AFF` |
+| `accent` (Standard, festgelegt) | `#0A84FF` Blau | `#007AFF` |
 | Akzent-Alternativen | Grün `#30D158` · Mint `#63E6BE` · Orange `#FF9F0A` · Lila `#BF5AF2` · Graphit `#8E8E93` | jeweils helle Variante |
 | `live` / `error` | `#FF453A` | `#FF3B30` |
 | `success` | `#30D158` | `#34C759` |
@@ -330,7 +330,12 @@ Letter-Spacing: Titel −0,4 bis −0,8 %, Body 0. Zeilenlänge für Fließtext 
 
 **Teststreams:** nur frei verfügbare, legale Quellen (z. B. die öffentlichen HLS-Beispielstreams von Apple Developer, Mux-Testvideo „Big Buck Bunny“/Blender-Open-Movies). Diese URLs stehen **nur** in `test/` bzw. in einem Debug-only-Konfigurationspfad, **nie** in der Release-App.
 
-**Ehrlicher Hinweis zur Umgebung:** Ich arbeite in einem Linux-Cloud-Container. Hier kann ich `flutter analyze`, `flutter test` und Android-Builds ausführen (sofern das SDK installierbar ist). **Nicht möglich hier:** iOS-Builds (benötigen macOS + Xcode), Android-/TV-Emulatoren mit Hardwarebeschleunigung (kein KVM), echte Fire-TV-Geräte, Chromecast, AirPlay. Diese Tests musst du auf deinen Geräten machen – ich liefere dafür pro Meilenstein eine kurze Testcheckliste.
+**Ehrlicher Hinweis zur Umgebung:** Ich arbeite in einem Linux-Cloud-Container. Hier kann ich `flutter analyze`, `flutter test` und Android-Builds ausführen (sofern das SDK installierbar ist). **Nicht möglich hier:** iOS-Builds, Emulatoren mit Hardwarebeschleunigung, Chromecast, AirPlay.
+
+**Dein Setup: Mac + iPhone, keine Android-Geräte.** Deshalb:
+- **iPhone:** echter Gerätetest über Xcode (kostenloses Apple-ID-Signing reicht für dein eigenes iPhone, 7 Tage gültig – kein bezahltes Konto nötig).
+- **Android-Phone, Android TV, Fire TV:** Emulatoren in Android Studio auf dem Mac (Profile „Pixel“, „Android TV 1080p“). Fire TV wird mit einem Android-TV-Emulator auf Android 9 (≈ Fire OS 7) angenähert. Echte Fire-TV-Leistung und echte Fernbedienungen können wir so **nicht** prüfen – das bleibt ein offener Punkt vor einem Release.
+- Pro Meilenstein liefere ich eine kurze Testcheckliste mit den Befehlen für den Mac.
 
 ---
 
@@ -345,7 +350,8 @@ Letter-Spacing: Titel −0,4 bis −0,8 %, Body 0. Zeilenlänge für Fließtext 
 | **3b – EPG** | Xtream short EPG + xmltv.php, XMLTV-URL (Streaming-Parser), Jetzt/Danach, Raster, Details, Zeitzonen-Offset, Erinnerungen | 7-Tage-EPG für 1.000 Kanäle in < 30 s importiert; Raster scrollt flüssig. |
 | **3c – Filme & Serien** | Raster, Sortierung, Details, Hero, Weiterschauen, Gesehen, Staffeln/Episoden, Auto-Next, Geschwindigkeit, Trailer | Weiterschauen überlebt App-Neustart. |
 | **4 – Extras** | Multi-Screen, Catch-up/Timeshift, Jugendschutz (PIN, Sperren), Chromecast, AirPlay, PiP, externer Player, Sleep-Timer, globale Suche-Feinschliff | Checkliste Phase 4 auf deinen Geräten bestanden. |
-| **5 – Feinschliff & Store** | TV-Fokus-Polish, Performance (Startzeit, Speicher), Barrierefreiheit (Screenreader, Kontrast, Schriftgröße), App-Icon/Banner, Store-Texte/Screenshots (legal), Data-Safety/App-Privacy, Altersfreigabe, Review-Notes, Datenschutzerklärung, `RELEASE.md` | Release-Kandidat; Anwalt hat Store-Texte + Datenschutz geprüft. |
+| **5 – Feinschliff** | TV-Fokus-Polish, Performance (Startzeit, Speicher), Barrierefreiheit (Screenreader, Kontrast, Schriftgröße), App-Icon/Banner, Datenschutzerklärung (Entwurf), `RELEASE.md` | Stabile Version auf iPhone + Emulatoren. |
+| *später* – Store | Konten, Signing, Store-Texte/Screenshots, Data-Safety/App-Privacy, Altersfreigabe, Review-Notes, Anwalt | Erst auf deine ausdrückliche Ansage. Nichts wird vorher irgendwo hochgeladen oder eingereicht. |
 
 Jede Phase wird in kleinen Commits umgesetzt, nach jedem Schritt `flutter analyze` + `flutter test`.
 
@@ -366,10 +372,14 @@ Jede Phase wird in kleinen Commits umgesetzt, nach jedem Schritt `flutter analyz
 
 ---
 
-## 13. Rückfragen an dich (max. 5)
+## 13. Entscheidungen (Antworten aus Phase 0)
 
-1. **Repository:** Dieses Repo enthält aktuell dein Walkthrough-Video-Projekt. Soll Lumen hier im Unterordner `lumen/` bleiben (so angelegt), oder legst du ein eigenes Repo an (empfohlen – sauberere Store-Builds und CI)?
-2. **Identität & Konten:** Welche Bundle-/Package-ID sollen wir nutzen (z. B. `de.deinname.lumen`)? Hast du bereits Entwicklerkonten (Apple Developer 99 $/Jahr, Google Play 25 $ einmalig, Amazon kostenlos) und Zugriff auf einen **Mac** für iOS-Builds?
-3. **Testgeräte:** Welche echten Geräte hast du (Android-Handy, iPhone, welcher Fire-TV-Stick, Android-TV-Gerät, Chromecast)? Danach richte ich die Mindestanforderungen und Test-Checklisten aus.
-4. **Standard-Akzentfarbe:** Apple-Blau `#0A84FF` oder ein Trade-Republic-artiges Grün `#30D158`? (Der Nutzer kann es später ändern.)
-5. **Release-Strategie & Geschäftsmodell:** Erst ein schlankes v1 (Quellen, Live, EPG, Filme, Serien, Player) veröffentlichen und Extras (Multi-Screen, Cast, Catch-up) als v1.1 nachliefern – oder alles in v1? Und soll die App kostenlos, Einmalkauf oder Abo sein (beeinflusst Store-Setup und In-App-Kauf-Integration)?
+| Thema | Entscheidung |
+|-------|--------------|
+| Repository | Dieses Repo, Projekt liegt direkt in der Wurzel. Das alte Walkthrough-Projekt ist gelöscht. |
+| Akzentfarbe | Standard-Blau `#0A84FF` (dunkel) / `#007AFF` (hell). |
+| Entwicklung | Mac + iPhone. Keine Android-Geräte → Android/TV/Fire TV nur per Emulator. |
+| Geschäftsmodell | Kostenlos. **Nichts mit Geld:** keine In-App-Käufe, kein Abo, keine Werbung, keine Bezahl-SDKs. |
+| Inhalte | Keine eigenen Sender, Playlists oder Demo-Zugänge (wie Leitplanke 1). |
+| Stores / Konten / Upload | Zurückgestellt. Nichts wird hochgeladen oder eingereicht, bis du es ausdrücklich sagst. |
+| Paket-ID | Platzhalter `app.lumen.player` – wird vor einem Release durch deine eigene ID ersetzt. |
