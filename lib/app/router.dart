@@ -6,6 +6,7 @@ import '../features/home/home_screen.dart';
 import '../features/live/live_screen.dart';
 import '../features/media/media_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
+import '../features/player/live_player_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/search/search_screen.dart';
 import '../features/settings/settings.dart';
@@ -56,6 +57,15 @@ final routerProvider = Provider<GoRouter>((ref) {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/player/live',
+        redirect: (_, s) => s.extra is LivePlayerArgs ? null : '/live',
+        pageBuilder: (_, s) => CustomTransitionPage(
+          key: s.pageKey,
+          child: LivePlayerScreen(args: s.extra! as LivePlayerArgs),
+          transitionsBuilder: (_, a, _, child) => FadeTransition(opacity: a, child: child),
+        ),
       ),
       GoRoute(
         path: '/sources/:id/edit',

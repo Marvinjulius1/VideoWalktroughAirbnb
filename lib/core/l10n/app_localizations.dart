@@ -1033,6 +1033,216 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'gerade eben'**
   String get justNow;
+
+  /// No description provided for @liveFavorites.
+  ///
+  /// In de, this message translates to:
+  /// **'Favoriten'**
+  String get liveFavorites;
+
+  /// No description provided for @liveRecent.
+  ///
+  /// In de, this message translates to:
+  /// **'Zuletzt gesehen'**
+  String get liveRecent;
+
+  /// No description provided for @liveAll.
+  ///
+  /// In de, this message translates to:
+  /// **'Alle Sender'**
+  String get liveAll;
+
+  /// No description provided for @liveNoFavoritesTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Noch keine Favoriten'**
+  String get liveNoFavoritesTitle;
+
+  /// No description provided for @liveNoFavoritesBody.
+  ///
+  /// In de, this message translates to:
+  /// **'Tippe auf den Stern neben einem Sender, um ihn hier zu sammeln.'**
+  String get liveNoFavoritesBody;
+
+  /// No description provided for @liveNoRecentTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Noch nichts gesehen'**
+  String get liveNoRecentTitle;
+
+  /// No description provided for @liveNoRecentBody.
+  ///
+  /// In de, this message translates to:
+  /// **'Sender, die du ansiehst, erscheinen hier.'**
+  String get liveNoRecentBody;
+
+  /// No description provided for @liveEmptyCategory.
+  ///
+  /// In de, this message translates to:
+  /// **'In dieser Kategorie gibt es keine Sender.'**
+  String get liveEmptyCategory;
+
+  /// No description provided for @favoriteAdd.
+  ///
+  /// In de, this message translates to:
+  /// **'Zu Favoriten hinzufügen'**
+  String get favoriteAdd;
+
+  /// No description provided for @favoriteRemove.
+  ///
+  /// In de, this message translates to:
+  /// **'Aus Favoriten entfernen'**
+  String get favoriteRemove;
+
+  /// No description provided for @channelNumber.
+  ///
+  /// In de, this message translates to:
+  /// **'Sender {number}'**
+  String channelNumber(int number);
+
+  /// No description provided for @liveBadge.
+  ///
+  /// In de, this message translates to:
+  /// **'LIVE'**
+  String get liveBadge;
+
+  /// No description provided for @playerReconnecting.
+  ///
+  /// In de, this message translates to:
+  /// **'Verbindung wird wiederhergestellt …'**
+  String get playerReconnecting;
+
+  /// No description provided for @playerFailedTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Wiedergabe nicht möglich'**
+  String get playerFailedTitle;
+
+  /// No description provided for @playerFailedBody.
+  ///
+  /// In de, this message translates to:
+  /// **'Der Sender ist gerade nicht erreichbar. Vielleicht hilft ein anderes Streamformat in den Einstellungen.'**
+  String get playerFailedBody;
+
+  /// No description provided for @playerClose.
+  ///
+  /// In de, this message translates to:
+  /// **'Schließen'**
+  String get playerClose;
+
+  /// No description provided for @playerPlay.
+  ///
+  /// In de, this message translates to:
+  /// **'Abspielen'**
+  String get playerPlay;
+
+  /// No description provided for @playerPause.
+  ///
+  /// In de, this message translates to:
+  /// **'Pause'**
+  String get playerPause;
+
+  /// No description provided for @playerPrevChannel.
+  ///
+  /// In de, this message translates to:
+  /// **'Vorheriger Sender'**
+  String get playerPrevChannel;
+
+  /// No description provided for @playerNextChannel.
+  ///
+  /// In de, this message translates to:
+  /// **'Nächster Sender'**
+  String get playerNextChannel;
+
+  /// No description provided for @playerOptions.
+  ///
+  /// In de, this message translates to:
+  /// **'Ton, Untertitel & Bild'**
+  String get playerOptions;
+
+  /// No description provided for @playerAudio.
+  ///
+  /// In de, this message translates to:
+  /// **'Ton'**
+  String get playerAudio;
+
+  /// No description provided for @playerSubtitles.
+  ///
+  /// In de, this message translates to:
+  /// **'Untertitel'**
+  String get playerSubtitles;
+
+  /// No description provided for @playerSubtitlesOff.
+  ///
+  /// In de, this message translates to:
+  /// **'Aus'**
+  String get playerSubtitlesOff;
+
+  /// No description provided for @playerPicture.
+  ///
+  /// In de, this message translates to:
+  /// **'Bild'**
+  String get playerPicture;
+
+  /// No description provided for @fitAuto.
+  ///
+  /// In de, this message translates to:
+  /// **'Automatisch'**
+  String get fitAuto;
+
+  /// No description provided for @fitFill.
+  ///
+  /// In de, this message translates to:
+  /// **'Füllen'**
+  String get fitFill;
+
+  /// No description provided for @fitZoom.
+  ///
+  /// In de, this message translates to:
+  /// **'Zoom'**
+  String get fitZoom;
+
+  /// No description provided for @fit16x9.
+  ///
+  /// In de, this message translates to:
+  /// **'16:9'**
+  String get fit16x9;
+
+  /// No description provided for @fit4x3.
+  ///
+  /// In de, this message translates to:
+  /// **'4:3'**
+  String get fit4x3;
+
+  /// No description provided for @playerNoTracks.
+  ///
+  /// In de, this message translates to:
+  /// **'Keine Auswahl verfügbar'**
+  String get playerNoTracks;
+
+  /// No description provided for @channelPosition.
+  ///
+  /// In de, this message translates to:
+  /// **'{current} von {total}'**
+  String channelPosition(int current, int total);
+
+  /// No description provided for @settingsPlayer.
+  ///
+  /// In de, this message translates to:
+  /// **'Player'**
+  String get settingsPlayer;
+
+  /// No description provided for @settingsLiveFormat.
+  ///
+  /// In de, this message translates to:
+  /// **'Streamformat (Xtream)'**
+  String get settingsLiveFormat;
+
+  /// No description provided for @settingsLiveFormatFooter.
+  ///
+  /// In de, this message translates to:
+  /// **'MPEG-TS funktioniert meist am besten. Wenn Sender ruckeln oder nicht starten, probiere HLS.'**
+  String get settingsLiveFormatFooter;
 }
 
 class _AppLocalizationsDelegate

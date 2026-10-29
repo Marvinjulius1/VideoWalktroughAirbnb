@@ -13,6 +13,8 @@ import '../../core/l10n/app_localizations.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/lumen_card.dart';
 import '../../core/widgets/lumen_page.dart';
+import '../live/live_providers.dart';
+import '../player/live_player_screen.dart';
 import '../sync/content_store.dart';
 import '../sync/sync_controller.dart';
 
@@ -57,6 +59,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       _hits = hits;
       _searched = q.trim();
     });
+  }
+
+  Future<void> _openChannel(int id) async {
+    final ch = await ref.read(liveRepositoryProvider).channelById(id);
+    if (ch == null || !mounted) return;
+    openLivePlayer(context, [ch], 0);
   }
 
   @override
@@ -141,8 +149,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         LumenListTile(
                           title: h.name,
                           leading: groupIcon(kind),
-                          // Öffnen kommt mit Live-TV/Filmen/Serien in Phase 3.
-                          onPressed: () {},
+                          // Filme/Serien öffnen sich ab Phase 3c (Detailseiten).
+                          onPressed: kind == ContentKind.live ? () => _openChannel(h.itemId) : null,
                         ),
                     ],
                   ),

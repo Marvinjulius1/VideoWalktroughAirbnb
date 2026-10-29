@@ -66,5 +66,22 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!--
+	  Lumen verbindet sich ausschließlich mit Servern, die der Nutzer selbst
+	  einträgt. Viele private Medienserver laufen nur per http. Deshalb:
+	  - NSAllowsArbitraryLoadsForMedia: gilt nur für Medien (AVFoundation),
+	    nicht für sonstigen Netzwerkverkehr.
+	  - NSAllowsLocalNetworking: Server im Heimnetz (z. B. NAS).
+	  Kein pauschales NSAllowsArbitraryLoads. Begründung siehe PLAN.md, Abschnitt 9.
+	-->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoadsForMedia</key>
+		<true/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Lumen verbindet sich mit Medienservern in deinem Heimnetz, die du selbst eingetragen hast.</string>
 </dict>
 </plist>

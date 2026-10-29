@@ -14,6 +14,9 @@ import 'package:lumen/features/settings/settings.dart';
 import 'package:lumen/features/sources/data/xtream/xtream_models.dart';
 import 'package:lumen/features/sources/domain/source_profile.dart';
 import 'package:lumen/features/sync/sync_controller.dart';
+import 'package:lumen/features/live/live_providers.dart';
+
+import 'fake_engine.dart';
 import 'package:dio/dio.dart';
 
 LumenDatabase memoryDb() {
@@ -43,8 +46,13 @@ class TestHarness {
     deviceProfileProvider.overrideWithValue(device),
     initialSettingsProvider.overrideWithValue(settings),
     connectionTesterProvider.overrideWithValue(_FakeTester(this)),
+    playerEngineFactoryProvider.overrideWithValue(() => engines.last),
     ...extraOverrides,
   ]);
+
+  /// Jeder geöffnete Player bekommt einen frischen Fake-Motor.
+  final List<FakeEngine> engines = [FakeEngine()];
+  FakeEngine get engine => engines.last;
 
   /// Für Tests, die z. B. einen echten Mock-Server einbinden.
   List<Override> extraOverrides = [];

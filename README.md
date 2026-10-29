@@ -16,7 +16,9 @@ Plan, Architektur und Design-Tokens: [`PLAN.md`](PLAN.md).
 | 0 – Plan | ✅ |
 | 1 – Fundament (Design-System, Navigation, Onboarding, Quellen sicher speichern) | ✅ |
 | 2 – Daten (Xtream-Client, M3U-Parser, Datenbank, Sync, Suche) | ✅ |
-| 3 – Live-TV und Player, EPG, Filme und Serien | als Nächstes |
+| 3a – Live-TV und Player | ✅ |
+| 3b – EPG (Programmführer) | als Nächstes |
+| 3c – Filme und Serien | danach |
 
 ## Auf dem Mac starten
 
@@ -80,6 +82,23 @@ nicht und wird es nicht geben.
 Messwerte aus den Tests (Linux-Rechner, nicht Handy):
 100.000 M3U-Einträge parsen ≈ 1 s; 50.000 Sender komplett laden
 (Parsen, Speichern, Suchindex) ≈ 1,7 s.
+
+## Player ohne eigenen Anbieter testen
+
+In `docs/testing/legal-test-streams.m3u` liegen drei öffentliche Teststreams
+(Apple-Beispielstreams, Mux). Datei aufs iPhone bringen (AirDrop → „In Dateien
+sichern“), dann in Lumen *Quelle hinzufügen → M3U-Datei*. Die Datei gehört
+nicht zur App.
+
+Bedienung im Player:
+
+| | Handy | TV-Fernbedienung |
+|---|---|---|
+| Overlay ein/aus | Tippen | OK |
+| Sender wechseln | nach oben/unten wischen | Hoch/Runter, CH+/CH− |
+| Sender per Nummer | – | Zifferntasten |
+| Pause | Play-Knopf | Play/Pause |
+| Ton/Untertitel/Bild | Regler-Knopf oben rechts | Menü-Taste |
 
 ## Datenschutz
 

@@ -518,4 +518,116 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get justNow => 'gerade eben';
+
+  @override
+  String get liveFavorites => 'Favoriten';
+
+  @override
+  String get liveRecent => 'Zuletzt gesehen';
+
+  @override
+  String get liveAll => 'Alle Sender';
+
+  @override
+  String get liveNoFavoritesTitle => 'Noch keine Favoriten';
+
+  @override
+  String get liveNoFavoritesBody =>
+      'Tippe auf den Stern neben einem Sender, um ihn hier zu sammeln.';
+
+  @override
+  String get liveNoRecentTitle => 'Noch nichts gesehen';
+
+  @override
+  String get liveNoRecentBody => 'Sender, die du ansiehst, erscheinen hier.';
+
+  @override
+  String get liveEmptyCategory => 'In dieser Kategorie gibt es keine Sender.';
+
+  @override
+  String get favoriteAdd => 'Zu Favoriten hinzufügen';
+
+  @override
+  String get favoriteRemove => 'Aus Favoriten entfernen';
+
+  @override
+  String channelNumber(int number) {
+    return 'Sender $number';
+  }
+
+  @override
+  String get liveBadge => 'LIVE';
+
+  @override
+  String get playerReconnecting => 'Verbindung wird wiederhergestellt …';
+
+  @override
+  String get playerFailedTitle => 'Wiedergabe nicht möglich';
+
+  @override
+  String get playerFailedBody =>
+      'Der Sender ist gerade nicht erreichbar. Vielleicht hilft ein anderes Streamformat in den Einstellungen.';
+
+  @override
+  String get playerClose => 'Schließen';
+
+  @override
+  String get playerPlay => 'Abspielen';
+
+  @override
+  String get playerPause => 'Pause';
+
+  @override
+  String get playerPrevChannel => 'Vorheriger Sender';
+
+  @override
+  String get playerNextChannel => 'Nächster Sender';
+
+  @override
+  String get playerOptions => 'Ton, Untertitel & Bild';
+
+  @override
+  String get playerAudio => 'Ton';
+
+  @override
+  String get playerSubtitles => 'Untertitel';
+
+  @override
+  String get playerSubtitlesOff => 'Aus';
+
+  @override
+  String get playerPicture => 'Bild';
+
+  @override
+  String get fitAuto => 'Automatisch';
+
+  @override
+  String get fitFill => 'Füllen';
+
+  @override
+  String get fitZoom => 'Zoom';
+
+  @override
+  String get fit16x9 => '16:9';
+
+  @override
+  String get fit4x3 => '4:3';
+
+  @override
+  String get playerNoTracks => 'Keine Auswahl verfügbar';
+
+  @override
+  String channelPosition(int current, int total) {
+    return '$current von $total';
+  }
+
+  @override
+  String get settingsPlayer => 'Player';
+
+  @override
+  String get settingsLiveFormat => 'Streamformat (Xtream)';
+
+  @override
+  String get settingsLiveFormatFooter =>
+      'MPEG-TS funktioniert meist am besten. Wenn Sender ruckeln oder nicht starten, probiere HLS.';
 }

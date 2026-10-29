@@ -5,6 +5,7 @@ import '../../app/providers.dart';
 import '../../core/db/database.dart';
 import '../../core/design/haptics.dart';
 import '../../core/design/tokens.dart';
+import '../sources/data/xtream/xtream_client.dart' show StreamFormat;
 
 /// Alle App-Einstellungen in einem unveränderlichen Objekt.
 @immutable
@@ -16,6 +17,7 @@ class AppSettings {
     this.haptics = true,
     this.onboardingDone = false,
     this.autoRefresh = true,
+    this.liveFormat = StreamFormat.ts,
   });
 
   /// Standard ist Dunkel (Design-Vorgabe), nicht System.
@@ -30,6 +32,9 @@ class AppSettings {
   /// Aktive Quelle beim Start automatisch neu laden, wenn sie veraltet ist.
   final bool autoRefresh;
 
+  /// Bevorzugtes Format für Live-Streams bei Xtream (`.ts` oder `.m3u8`).
+  final StreamFormat liveFormat;
+
   Locale? get locale => localeCode == null ? null : Locale(localeCode!);
 
   AppSettings copyWith({
@@ -39,6 +44,7 @@ class AppSettings {
     bool? haptics,
     bool? onboardingDone,
     bool? autoRefresh,
+    StreamFormat? liveFormat,
   }) =>
       AppSettings(
         themeMode: themeMode ?? this.themeMode,
@@ -47,6 +53,7 @@ class AppSettings {
         haptics: haptics ?? this.haptics,
         onboardingDone: onboardingDone ?? this.onboardingDone,
         autoRefresh: autoRefresh ?? this.autoRefresh,
+        liveFormat: liveFormat ?? this.liveFormat,
       );
 
   Map<String, String> toEntries() => {
@@ -56,6 +63,7 @@ class AppSettings {
         'haptics': '$haptics',
         'onboarding_done': '$onboardingDone',
         'auto_refresh': '$autoRefresh',
+        'live_format': liveFormat.name,
       };
 
   factory AppSettings.fromEntries(Map<String, String> e) => AppSettings(
@@ -68,6 +76,7 @@ class AppSettings {
         haptics: e['haptics'] != 'false',
         onboardingDone: e['onboarding_done'] == 'true',
         autoRefresh: e['auto_refresh'] != 'false',
+        liveFormat: e['live_format'] == 'm3u8' ? StreamFormat.m3u8 : StreamFormat.ts,
       );
 }
 
@@ -123,6 +132,7 @@ class SettingsController extends Notifier<AppSettings> {
   Future<void> setLocale(String? code) =>
       _set(state.copyWith(localeCode: () => code));
   Future<void> setHaptics(bool v) => _set(state.copyWith(haptics: v));
+  Future<void> setLiveFormat(StreamFormat f) => _set(state.copyWith(liveFormat: f));
   Future<void> setAutoRefresh(bool v) => _set(state.copyWith(autoRefresh: v));
   Future<void> completeOnboarding() =>
       _set(state.copyWith(onboardingDone: true));

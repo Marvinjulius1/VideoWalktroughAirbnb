@@ -145,6 +145,39 @@ class AccountInfos extends Table {
   Set<Column> get primaryKey => {profileId};
 }
 
+/// Favoriten. Verweisen über den stabilen `itemKey`, damit sie ein
+/// Aktualisieren der Quelle überleben.
+@DataClassName('FavoriteRow')
+class Favorites extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get profileId =>
+      text().references(Profiles, #id, onDelete: KeyAction.cascade)();
+  TextColumn get kind => textEnum<ContentKind>()();
+  TextColumn get itemKey => text()();
+
+  /// Eigene Reihenfolge (kleiner = weiter oben).
+  IntColumn get sortIndex => integer()();
+  DateTimeColumn get addedAt => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+        {profileId, kind, itemKey},
+      ];
+}
+
+/// Zuletzt gesehen. Ein Eintrag je Inhalt, mit dem letzten Zeitpunkt.
+@DataClassName('HistoryRow')
+class WatchHistory extends Table {
+  TextColumn get profileId =>
+      text().references(Profiles, #id, onDelete: KeyAction.cascade)();
+  TextColumn get kind => textEnum<ContentKind>()();
+  TextColumn get itemKey => text()();
+  DateTimeColumn get watchedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {profileId, kind, itemKey};
+}
+
 /// Volltext-Suchindex (SQLite FTS5) über Sender, Filme und Serien.
 ///
 /// `remove_diacritics 2`: „Café“ findet auch „cafe“. Spalten mit UNINDEXED
@@ -159,7 +192,7 @@ CREATE VIRTUAL TABLE IF NOT EXISTS search_index USING fts5(
   tokenize = 'unicode61 remove_diacritics 2'
 )''';
 
-@DriftDatabase(tables: [Profiles, Settings, Categories, Channels, VodItems, SeriesItems, AccountInfos])
+@DriftDatabase(tables: [Profiles, Settings, Categories, Channels, VodItems, SeriesItems, AccountInfos, Favorites, WatchHistory])
 class LumenDatabase extends _$LumenDatabase {
   LumenDatabase(super.e);
 
@@ -168,7 +201,7 @@ class LumenDatabase extends _$LumenDatabase {
       LumenDatabase(driftDatabase(name: 'lumen'));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -184,6 +217,10 @@ class LumenDatabase extends _$LumenDatabase {
             await m.createTable(seriesItems);
             await m.createTable(accountInfos);
             await _createIndexes();
+          }
+          if (from < 3) {
+            await m.createTable(favorites);
+            await m.createTable(watchHistory);
           }
         },
         beforeOpen: (details) async {

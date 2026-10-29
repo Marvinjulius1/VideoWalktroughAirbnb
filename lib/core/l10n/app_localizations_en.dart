@@ -512,4 +512,116 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get justNow => 'just now';
+
+  @override
+  String get liveFavorites => 'Favourites';
+
+  @override
+  String get liveRecent => 'Recently watched';
+
+  @override
+  String get liveAll => 'All channels';
+
+  @override
+  String get liveNoFavoritesTitle => 'No favourites yet';
+
+  @override
+  String get liveNoFavoritesBody =>
+      'Tap the star next to a channel to collect it here.';
+
+  @override
+  String get liveNoRecentTitle => 'Nothing watched yet';
+
+  @override
+  String get liveNoRecentBody => 'Channels you watch will appear here.';
+
+  @override
+  String get liveEmptyCategory => 'There are no channels in this category.';
+
+  @override
+  String get favoriteAdd => 'Add to favourites';
+
+  @override
+  String get favoriteRemove => 'Remove from favourites';
+
+  @override
+  String channelNumber(int number) {
+    return 'Channel $number';
+  }
+
+  @override
+  String get liveBadge => 'LIVE';
+
+  @override
+  String get playerReconnecting => 'Reconnecting …';
+
+  @override
+  String get playerFailedTitle => 'Playback not possible';
+
+  @override
+  String get playerFailedBody =>
+      'This channel can’t be reached right now. A different stream format in the settings might help.';
+
+  @override
+  String get playerClose => 'Close';
+
+  @override
+  String get playerPlay => 'Play';
+
+  @override
+  String get playerPause => 'Pause';
+
+  @override
+  String get playerPrevChannel => 'Previous channel';
+
+  @override
+  String get playerNextChannel => 'Next channel';
+
+  @override
+  String get playerOptions => 'Audio, subtitles & picture';
+
+  @override
+  String get playerAudio => 'Audio';
+
+  @override
+  String get playerSubtitles => 'Subtitles';
+
+  @override
+  String get playerSubtitlesOff => 'Off';
+
+  @override
+  String get playerPicture => 'Picture';
+
+  @override
+  String get fitAuto => 'Automatic';
+
+  @override
+  String get fitFill => 'Fill';
+
+  @override
+  String get fitZoom => 'Zoom';
+
+  @override
+  String get fit16x9 => '16:9';
+
+  @override
+  String get fit4x3 => '4:3';
+
+  @override
+  String get playerNoTracks => 'Nothing to choose';
+
+  @override
+  String channelPosition(int current, int total) {
+    return '$current of $total';
+  }
+
+  @override
+  String get settingsPlayer => 'Player';
+
+  @override
+  String get settingsLiveFormat => 'Stream format (Xtream)';
+
+  @override
+  String get settingsLiveFormatFooter =>
+      'MPEG-TS usually works best. If channels stutter or don’t start, try HLS.';
 }

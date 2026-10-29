@@ -11,6 +11,7 @@ import '../../core/widgets/lumen_card.dart';
 import '../../core/widgets/lumen_page.dart';
 import '../../core/widgets/pressable.dart';
 import '../../core/widgets/segmented_control.dart';
+import '../sources/data/xtream/xtream_client.dart' show StreamFormat;
 import 'settings.dart';
 
 final appVersionProvider = FutureProvider<String>((ref) async {
@@ -108,6 +109,31 @@ class SettingsScreen extends ConsumerWidget {
                     leading: LucideIcons.vibrate,
                     trailing: Switch(value: s.haptics, onChanged: ctrl.setHaptics),
                   ),
+              ],
+            ),
+          ),
+          gap,
+          SliverToBoxAdapter(
+            child: LumenGroup(
+              title: t.settingsPlayer,
+              footer: t.settingsLiveFormatFooter,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(LumenSpace.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(t.settingsLiveFormat,
+                          style: l.text.body.copyWith(color: l.palette.textPrimary)),
+                      const SizedBox(height: LumenSpace.sm),
+                      LumenSegmentedControl<StreamFormat>(
+                        segments: const {StreamFormat.ts: 'MPEG-TS', StreamFormat.m3u8: 'HLS'},
+                        selected: s.liveFormat,
+                        onChanged: ctrl.setLiveFormat,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
