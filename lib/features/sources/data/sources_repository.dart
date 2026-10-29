@@ -105,13 +105,17 @@ class SourcesRepository {
             .write(const ProfilesCompanion(isDefault: Value(true)));
       });
 
-  /// Löscht Quelle, Zugangsdaten und eine importierte Playlist-Datei.
+  /// Löscht Quelle, alle geladenen Inhalte, Zugangsdaten und eine
+  /// importierte Playlist-Datei.
   /// War sie Standard, wird die nächste Quelle Standard.
   Future<void> delete(String id) async {
     final profile = await byId(id);
     if (profile == null) return;
     await _db.transaction(() async {
       await (_db.delete(_db.profiles)..where((p) => p.id.equals(id))).go();
+      // Inhalte verschwinden per Fremdschlüssel; der Suchindex ist eine
+      // virtuelle Tabelle ohne Fremdschlüssel und wird extra geleert.
+      await _db.customStatement('DELETE FROM search_index WHERE profile_id = ?', [id]);
       if (profile.isDefault) {
         final next = await (_db.select(_db.profiles)
               ..orderBy([(p) => OrderingTerm.asc(p.sortOrder)])

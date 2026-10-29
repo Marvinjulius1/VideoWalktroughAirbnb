@@ -2,6 +2,9 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
 import '../../features/sources/domain/source_profile.dart';
+import 'content_kind.dart';
+
+export 'content_kind.dart';
 
 part 'database.g.dart';
 
@@ -42,7 +45,121 @@ class Settings extends Table {
   Set<Column> get primaryKey => {key};
 }
 
-@DriftDatabase(tables: [Profiles, Settings])
+@DataClassName('CategoryRow')
+class Categories extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  // Wird das Profil gelöscht, verschwinden auch alle zugehörigen Inhalte.
+  TextColumn get profileId =>
+      text().references(Profiles, #id, onDelete: KeyAction.cascade)();
+  TextColumn get kind => textEnum<ContentKind>()();
+  TextColumn get remoteId => text()();
+  TextColumn get name => text()();
+  IntColumn get sortIndex => integer()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+        {profileId, kind, remoteId},
+      ];
+}
+
+/// Live-Sender.
+@DataClassName('ChannelRow')
+class Channels extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  // Wird das Profil gelöscht, verschwinden auch alle zugehörigen Inhalte.
+  TextColumn get profileId =>
+      text().references(Profiles, #id, onDelete: KeyAction.cascade)();
+
+  /// Stabiler Schlüssel: Xtream `stream_id` bzw. M3U-Schlüssel.
+  TextColumn get itemKey => text()();
+  IntColumn get num => integer().nullable()();
+  TextColumn get name => text()();
+  TextColumn get logo => text().nullable()();
+  TextColumn get categoryId => text().nullable()();
+  TextColumn get epgChannelId => text().nullable()();
+  BoolColumn get tvArchive => boolean().withDefault(const Constant(false))();
+  IntColumn get archiveDays => integer().withDefault(const Constant(0))();
+
+  /// Nur M3U: direkte Stream-Adresse. Kann Zugangsdaten enthalten – die
+  /// Datenbank liegt im privaten App-Ordner und wird nie exportiert.
+  TextColumn get url => text().nullable()();
+  TextColumn get userAgent => text().nullable()();
+  DateTimeColumn get addedAt => dateTime().nullable()();
+  IntColumn get sortIndex => integer()();
+}
+
+@DataClassName('VodRow')
+class VodItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  // Wird das Profil gelöscht, verschwinden auch alle zugehörigen Inhalte.
+  TextColumn get profileId =>
+      text().references(Profiles, #id, onDelete: KeyAction.cascade)();
+  TextColumn get itemKey => text()();
+  TextColumn get name => text()();
+  TextColumn get poster => text().nullable()();
+  TextColumn get categoryId => text().nullable()();
+  RealColumn get rating => real().nullable()();
+  IntColumn get year => integer().nullable()();
+  TextColumn get containerExt => text().nullable()();
+  TextColumn get url => text().nullable()();
+  DateTimeColumn get addedAt => dateTime().nullable()();
+  IntColumn get sortIndex => integer()();
+}
+
+@DataClassName('SeriesRow')
+class SeriesItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  // Wird das Profil gelöscht, verschwinden auch alle zugehörigen Inhalte.
+  TextColumn get profileId =>
+      text().references(Profiles, #id, onDelete: KeyAction.cascade)();
+  TextColumn get itemKey => text()();
+  TextColumn get name => text()();
+  TextColumn get cover => text().nullable()();
+  TextColumn get categoryId => text().nullable()();
+  RealColumn get rating => real().nullable()();
+  IntColumn get year => integer().nullable()();
+  TextColumn get plot => text().nullable()();
+  TextColumn get genre => text().nullable()();
+  TextColumn get url => text().nullable()();
+  DateTimeColumn get lastModified => dateTime().nullable()();
+  IntColumn get sortIndex => integer()();
+}
+
+/// Kontoinfo (nur Xtream), beim Verbindungstest/Aktualisieren gespeichert.
+@DataClassName('AccountInfoRow')
+class AccountInfos extends Table {
+  // Wird das Profil gelöscht, verschwinden auch alle zugehörigen Inhalte.
+  TextColumn get profileId =>
+      text().references(Profiles, #id, onDelete: KeyAction.cascade)();
+  TextColumn get status => text().nullable()();
+  DateTimeColumn get expiresAt => dateTime().nullable()();
+  DateTimeColumn get createdAt => dateTime().nullable()();
+  BoolColumn get isTrial => boolean().withDefault(const Constant(false))();
+  IntColumn get activeConnections => integer().nullable()();
+  IntColumn get maxConnections => integer().nullable()();
+  TextColumn get serverTimezone => text().nullable()();
+  TextColumn get allowedFormats => text().withDefault(const Constant(''))();
+  DateTimeColumn get fetchedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {profileId};
+}
+
+/// Volltext-Suchindex (SQLite FTS5) über Sender, Filme und Serien.
+///
+/// `remove_diacritics 2`: „Café“ findet auch „cafe“. Spalten mit UNINDEXED
+/// werden nur mitgespeichert, nicht durchsucht.
+const ftsCreateStatement = '''
+CREATE VIRTUAL TABLE IF NOT EXISTS search_index USING fts5(
+  name,
+  kind UNINDEXED,
+  item_id UNINDEXED,
+  profile_id UNINDEXED,
+  image UNINDEXED,
+  tokenize = 'unicode61 remove_diacritics 2'
+)''';
+
+@DriftDatabase(tables: [Profiles, Settings, Categories, Channels, VodItems, SeriesItems, AccountInfos])
 class LumenDatabase extends _$LumenDatabase {
   LumenDatabase(super.e);
 
@@ -51,12 +168,39 @@ class LumenDatabase extends _$LumenDatabase {
       LumenDatabase(driftDatabase(name: 'lumen'));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) async {
+          await m.createAll();
+          await _createIndexes();
+        },
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await m.createTable(categories);
+            await m.createTable(channels);
+            await m.createTable(vodItems);
+            await m.createTable(seriesItems);
+            await m.createTable(accountInfos);
+            await _createIndexes();
+          }
+        },
         beforeOpen: (details) async {
           await customStatement('PRAGMA foreign_keys = ON');
         },
       );
+
+  Future<void> _createIndexes() async {
+    await customStatement(ftsCreateStatement);
+    for (final stmt in const [
+      'CREATE INDEX IF NOT EXISTS idx_channels_cat ON channels (profile_id, category_id, sort_index)',
+      'CREATE INDEX IF NOT EXISTS idx_channels_key ON channels (profile_id, item_key)',
+      'CREATE INDEX IF NOT EXISTS idx_vod_cat ON vod_items (profile_id, category_id, sort_index)',
+      'CREATE INDEX IF NOT EXISTS idx_vod_added ON vod_items (profile_id, added_at)',
+      'CREATE INDEX IF NOT EXISTS idx_series_cat ON series_items (profile_id, category_id, sort_index)',
+    ]) {
+      await customStatement(stmt);
+    }
+  }
 }
