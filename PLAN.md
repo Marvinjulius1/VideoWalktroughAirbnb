@@ -12,7 +12,7 @@ Stand: Phase 0 abgeschlossen, Entscheidungen siehe Abschnitt 13.
 | # | Regel | Wie wir sie technisch absichern |
 |---|-------|--------------------------------|
 | 1 | Keine vorinstallierten Inhalte, Playlists, Demo-Zugänge, Anbieter-Links | Erster Start = leerer Zustand „Quelle hinzufügen“. Ein CI-Test sucht im Code nach `http(s)://`-Literalen außerhalb einer Allowlist (Testserver `localhost`, Lizenz-/Doku-Links). |
-| 2 | Kein Smarters-Branding, keine kopierten Assets/Texte/Screens/Code | Eigener Name, eigenes Logo, eigene Icons (Phosphor-Set, MIT). Navigation bewusst anders (siehe Abschnitt 7). Kein Fremdcode, nur eigene Implementierung gegen die öffentlich dokumentierte Xtream-API. |
+| 2 | Kein Smarters-Branding, keine kopierten Assets/Texte/Screens/Code | Eigener Name, eigenes Logo, eigene Icons (Lucide-Set via `lucide_icons_flutter`, ISC/MIT). Navigation bewusst anders (siehe Abschnitt 7). Kein Fremdcode, nur eigene Implementierung gegen die öffentlich dokumentierte Xtream-API. |
 | 3 | Inhaltshinweis | Auf dem letzten Onboarding-Screen (Pflicht-Bestätigung) und unter Einstellungen → Info: *„Diese App enthält keine Inhalte. Du bist selbst dafür verantwortlich, nur Quellen zu verwenden, zu deren Nutzung du berechtigt bist.“* |
 | 4 | Keine Werbung für illegale Nutzung | Store-Texte und Screenshots nur mit eigenen, legalen Testinhalten (z. B. öffentliche HLS-Testvideos, selbst gebaute Mock-Kanäle mit Fantasienamen). Keine Wörter wie „kostenlos Sky/DAZN“, „10.000 Sender“ usw. |
 | 5 | Datenschutz | Zugangsdaten nur lokal, verschlüsselt (`flutter_secure_storage` → iOS Keychain / Android Keystore). Keine Analytics, kein Crash-Reporting-Dienst, keine eigenen Server in v1. Datenschutzerklärung als Entwurf in `docs/legal/PRIVACY_de.md` + `_en.md`. |
@@ -35,7 +35,7 @@ Stand: Phase 0 abgeschlossen, Entscheidungen siehe Abschnitt 13.
 | Einstellungen | Drift-Tabelle `settings` (statt shared_preferences) | Eine Quelle der Wahrheit, migrierbar, testbar. |
 | Parsing großer Daten | **Isolates** (`Isolate.run` / eigener Worker) + Streaming-Parser | Hauptthread bleibt flüssig (60/120 fps), auch bei 50 MB-M3U oder 200 MB-XMLTV. |
 | JSON | `json_serializable` / `freezed` | Unveränderliche Modelle, robuste Deserialisierung (Xtream liefert Zahlen mal als String, mal als Int → tolerante Converter). |
-| Icons | **`phosphor_flutter`** (MIT, Stil „regular/fill“) | Ruhig, SF-Symbols-ähnlich, einheitlich. |
+| Icons | **`lucide_icons_flutter`** (Lucide, ISC/MIT; Strichstärken 300–600) | Ruhig, SF-Symbols-ähnlich, einheitlich. `phosphor_flutter` ist mit aktuellem Flutter inkompatibel (`IconData` ist inzwischen `final`). |
 | Schrift | **Inter** (OFL, als Asset gebündelt) mit `FontFeature.tabularFigures()` für Zahlen | SF Pro darf außerhalb von Apple-Plattformen nicht verteilt werden. Inter ist sehr nah dran. |
 | Lokalisierung | `flutter_localizations` + ARB (`de`, `en`) | Standard, unterstützt von Stores. |
 | Benachrichtigungen | `flutter_local_notifications` + `timezone` | Lokale Erinnerungen für Sendungen, kein Push-Server. |
