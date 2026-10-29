@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Klartext-HTTP ist erlaubt, weil Nutzer ihre EIGENEN Medienserver eintragen,
+  die sehr oft nur per http (mit Port) erreichbar sind. Die App selbst
+  kontaktiert keine eigenen Server. Begründung für die Store-Prüfung siehe
+  PLAN.md, Abschnitt 9.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
