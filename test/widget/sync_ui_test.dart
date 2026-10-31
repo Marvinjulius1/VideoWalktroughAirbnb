@@ -35,11 +35,21 @@ void main() {
     final profile = (await tester.runAsync(() => h.container.read(sourcesRepositoryProvider).all()))!.first;
     // flutter_test blockiert normalerweise alle HTTP-Anfragen (Antwort 400).
     // Für diesen Test erlauben wir echte Verbindungen – nur zum lokalen
-    // Mock-Server.
-    await tester.runAsync(() => HttpOverrides.runWithHttpOverrides(
-          () => h.container.read(syncControllerProvider.notifier).syncNow(profile),
-          _RealHttp(),
-        ));
+    // Mock-Server. Wir warten in kleinen Schritten und zeichnen dazwischen
+    // Bilder, damit Datenbank-Streams der Oberfläche weiterlaufen können.
+    var done = false;
+    // In echter Zeit starten (Netzwerk-Timer), aber nicht darauf warten.
+    await tester.runAsync(() async {
+      HttpOverrides.runWithHttpOverrides(
+        () => h.container.read(syncControllerProvider.notifier).syncNow(profile).whenComplete(() => done = true),
+        _RealHttp(),
+      );
+    });
+    for (var i = 0; i < 200 && !done; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 25)));
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    expect(done, isTrue, reason: 'Aktualisieren wurde nicht fertig');
     await settle(tester);
   }
 

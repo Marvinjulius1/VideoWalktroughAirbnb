@@ -15,6 +15,9 @@ import 'package:lumen/features/sources/data/xtream/xtream_models.dart';
 import 'package:lumen/features/sources/domain/source_profile.dart';
 import 'package:lumen/features/sync/sync_controller.dart';
 import 'package:lumen/features/live/live_providers.dart';
+import 'package:lumen/features/epg/epg_providers.dart';
+
+import 'package:lumen/features/epg/data/reminders.dart';
 
 import 'fake_engine.dart';
 import 'package:dio/dio.dart';
@@ -30,7 +33,11 @@ class TestHarness {
   TestHarness({
     this.settings = const AppSettings(onboardingDone: true, localeCode: 'de', autoRefresh: false),
     this.device = const DeviceProfile(),
-  });
+    DateTime? now,
+  }) : now = now ?? DateTime.now();
+
+  /// Feste Uhrzeit für den Test (EPG, Fortschrittsbalken).
+  final DateTime now;
 
   final AppSettings settings;
   final DeviceProfile device;
@@ -47,8 +54,14 @@ class TestHarness {
     initialSettingsProvider.overrideWithValue(settings),
     connectionTesterProvider.overrideWithValue(_FakeTester(this)),
     playerEngineFactoryProvider.overrideWithValue(() => engines.last),
+    notificationSchedulerProvider.overrideWithValue(scheduler),
+    clockProvider.overrideWithValue(() => now),
+    // Kein periodischer Minuten-Timer im Test.
+    minuteTickProvider.overrideWith((ref) => Stream.value(now)),
     ...extraOverrides,
   ]);
+
+  final FakeScheduler scheduler = FakeScheduler();
 
   /// Jeder geöffnete Player bekommt einen frischen Fake-Motor.
   final List<FakeEngine> engines = [FakeEngine()];
@@ -101,4 +114,17 @@ class _FakeTester extends ConnectionTester {
     if (h.connectionError != null) throw SourceException(h.connectionError!);
     return null;
   }
+}
+
+class FakeScheduler implements NotificationScheduler {
+  bool allow = true;
+  final scheduled = <int, DateTime>{};
+
+  @override
+  Future<bool> ensurePermission() async => allow;
+  @override
+  Future<void> schedule({required int id, required String title, required String body, required DateTime atUtc}) async =>
+      scheduled[id] = atUtc;
+  @override
+  Future<void> cancel(int id) async => scheduled.remove(id);
 }

@@ -38,6 +38,9 @@ class MockServer {
 
   String m3u = sampleM3u(10);
 
+  /// Bezugszeit für die erzeugten Programmdaten.
+  DateTime epgNow = DateTime.now().toUtc();
+
   final requests = <Uri>[];
 
   String get base => 'http://127.0.0.1:${_server.port}';
@@ -61,6 +64,16 @@ class MockServer {
     if (path == 'player_api.php') return _api(r.url.queryParameters);
     if (path == 'playlist.m3u') {
       return Response.ok(m3u, headers: {'content-type': 'audio/x-mpegurl'});
+    }
+    if (path == 'xmltv.php') {
+      final q = r.url.queryParameters;
+      if (q['username'] != username || q['password'] != password) return Response(401);
+      return Response.ok(sampleXmltv(epgNow, liveCount), headers: {'content-type': 'application/xml'});
+    }
+    if (path == 'epg.xml') return Response.ok(sampleXmltv(epgNow, 10));
+    if (path == 'epg.xml.gz') {
+      return Response.ok(gzip.encode(utf8.encode(sampleXmltv(epgNow, 10))),
+          headers: {'content-type': 'application/gzip'});
     }
     if (path == 'not-a-playlist') return Response.ok('<html>Hallo</html>');
     if (path == 'missing.m3u') return Response.notFound('nope');
@@ -221,5 +234,34 @@ String sampleM3u(int live, {String host = 'http://127.0.0.1'}) {
   b.writeln('$host/videos/b.mp4');
   b.writeln('#EXTINF:-1 group-title="Serien",Testserie S01 E01');
   b.writeln('$host/series/u/p/9.mp4');
+  return b.toString();
+}
+
+String _xmltvTime(DateTime utc) {
+  String two(int v) => v.toString().padLeft(2, '0');
+  final t = utc.toUtc();
+  return '${t.year}${two(t.month)}${two(t.day)}${two(t.hour)}${two(t.minute)}00 +0000';
+}
+
+/// Erfundene XMLTV-Daten: je Kanal Sendungen à 60 Minuten von −3 h bis +5 h
+/// um [now] herum. Kanal-IDs wie in [sampleM3u] (`test1.de` …).
+String sampleXmltv(DateTime now, int channels) {
+  final start = DateTime.utc(now.year, now.month, now.day, now.hour).subtract(const Duration(hours: 3));
+  final b = StringBuffer('<?xml version="1.0" encoding="UTF-8"?>\n<tv generator-info-name="lumen-test">\n');
+  for (var c = 1; c <= channels; c++) {
+    b.writeln('  <channel id="test$c.de"><display-name lang="de">Testkanal $c</display-name></channel>');
+  }
+  for (var c = 1; c <= channels; c++) {
+    for (var h = 0; h < 8; h++) {
+      final s = start.add(Duration(hours: h));
+      final e = s.add(const Duration(hours: 1));
+      b.writeln('  <programme start="${_xmltvTime(s)}" stop="${_xmltvTime(e)}" channel="test$c.de">');
+      b.writeln('    <title lang="de">Sendung $h auf Kanal $c</title>');
+      b.writeln('    <desc lang="de">Erfundene Beschreibung &amp; mehr.</desc>');
+      b.writeln('    <category lang="de">Test</category>');
+      b.writeln('  </programme>');
+    }
+  }
+  b.writeln('</tv>');
   return b.toString();
 }

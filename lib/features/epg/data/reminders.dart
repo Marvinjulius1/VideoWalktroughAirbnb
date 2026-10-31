@@ -88,8 +88,9 @@ class ReminderRepository {
   final NotificationScheduler _scheduler;
   final DateTime Function() _now;
 
+  /// Sekundengenau – so speichert die Datenbank Zeitpunkte.
   static String keyOf(String epgChannelId, DateTime startUtc) =>
-      '$epgChannelId|${startUtc.millisecondsSinceEpoch}';
+      '$epgChannelId|${startUtc.millisecondsSinceEpoch ~/ 1000}';
 
   Stream<Set<String>> watchKeys(String profileId) =>
       (_db.select(_db.reminders)..where((r) => r.profileId.equals(profileId)))
