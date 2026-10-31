@@ -88,10 +88,12 @@ class LumenButton extends StatelessWidget {
       child: Container(
         height: height,
         width: expand ? double.infinity : null,
-        padding: const EdgeInsets.symmetric(horizontal: LumenSpace.xl),
-        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(
+            horizontal: variant == LumenButtonVariant.text ? LumenSpace.xs : LumenSpace.xl),
+        // Nur volle Breite, wenn gewünscht – sonst so breit wie der Inhalt.
+        alignment: expand ? Alignment.center : null,
         decoration: BoxDecoration(color: bg, borderRadius: LumenRadius.mdAll),
-        child: ExcludeSemantics(child: content),
+        child: ExcludeSemantics(child: expand ? content : Center(widthFactor: 1, child: content)),
       ),
     );
   }

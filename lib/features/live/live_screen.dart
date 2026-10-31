@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:lucide_icons_flutter/lucide_icons_300.dart';
-import 'package:lucide_icons_flutter/lucide_icons_600.dart';
 
 import '../../app/providers.dart';
 import '../../core/db/database.dart';
@@ -325,8 +324,9 @@ class ChannelTile extends StatelessWidget {
             semanticLabel: favorite ? t.favoriteRemove : t.favoriteAdd,
             child: Padding(
               padding: const EdgeInsets.all(LumenSpace.sm),
+              // Lucide hat keine gefüllten Icons; für „aktiv“ ein gefüllter Stern.
               child: Icon(
-                favorite ? LucideIcons600.star : LucideIcons.star,
+                favorite ? Icons.star_rounded : LucideIcons.star,
                 color: favorite ? l.accent : p.textTertiary,
                 size: tv ? 30 : 22,
               ),

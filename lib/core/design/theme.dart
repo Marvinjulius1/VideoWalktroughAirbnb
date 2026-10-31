@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'tokens.dart';
 import 'typography.dart';
@@ -129,6 +130,10 @@ ThemeData buildLumenTheme({
       labelSmall: c(type.caption, p.textSecondary),
     ),
     iconTheme: IconThemeData(color: p.textPrimary, size: isTv ? 32 : 24),
+    // Schlanker Zurück-Pfeil (Lucide) statt des Material-Pfeils.
+    actionIconTheme: ActionIconThemeData(
+      backButtonIconBuilder: (_) => const Icon(LucideIcons.chevronLeft, size: 28),
+    ),
     appBarTheme: AppBarTheme(
       backgroundColor: p.bg,
       surfaceTintColor: Colors.transparent,
