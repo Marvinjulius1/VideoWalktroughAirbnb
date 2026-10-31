@@ -178,10 +178,46 @@ class WatchHistory extends Table {
   Set<Column> get primaryKey => {profileId, kind, itemKey};
 }
 
+/// Programmdaten (EPG). Zeiten in UTC. Es wird nur ein Fenster von
+/// gestern bis in 7 Tagen gespeichert.
+@DataClassName('EpgRow')
+class EpgPrograms extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get profileId =>
+      text().references(Profiles, #id, onDelete: KeyAction.cascade)();
+  TextColumn get channelId => text()();
+  DateTimeColumn get startUtc => dateTime()();
+  DateTimeColumn get endUtc => dateTime()();
+  TextColumn get title => text()();
+  TextColumn get description => text().nullable()();
+  TextColumn get category => text().nullable()();
+}
+
+/// Erinnerungen an Sendungen (lokale Benachrichtigungen).
+@DataClassName('ReminderRow')
+class Reminders extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get profileId =>
+      text().references(Profiles, #id, onDelete: KeyAction.cascade)();
+  TextColumn get channelKey => text()();
+  TextColumn get channelName => text()();
+  TextColumn get epgChannelId => text()();
+  TextColumn get title => text()();
+  DateTimeColumn get startUtc => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+        {profileId, epgChannelId, startUtc},
+      ];
+}
+
 /// Volltext-Suchindex (SQLite FTS5) über Sender, Filme und Serien.
 ///
 /// `remove_diacritics 2`: „Café“ findet auch „cafe“. Spalten mit UNINDEXED
 /// werden nur mitgespeichert, nicht durchsucht.
+const _epgIndex =
+    'CREATE INDEX IF NOT EXISTS idx_epg_channel ON epg_programs (profile_id, channel_id, start_utc)';
+
 const ftsCreateStatement = '''
 CREATE VIRTUAL TABLE IF NOT EXISTS search_index USING fts5(
   name,
@@ -192,7 +228,7 @@ CREATE VIRTUAL TABLE IF NOT EXISTS search_index USING fts5(
   tokenize = 'unicode61 remove_diacritics 2'
 )''';
 
-@DriftDatabase(tables: [Profiles, Settings, Categories, Channels, VodItems, SeriesItems, AccountInfos, Favorites, WatchHistory])
+@DriftDatabase(tables: [Profiles, Settings, Categories, Channels, VodItems, SeriesItems, AccountInfos, Favorites, WatchHistory, EpgPrograms, Reminders])
 class LumenDatabase extends _$LumenDatabase {
   LumenDatabase(super.e);
 
@@ -201,7 +237,7 @@ class LumenDatabase extends _$LumenDatabase {
       LumenDatabase(driftDatabase(name: 'lumen'));
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -222,6 +258,11 @@ class LumenDatabase extends _$LumenDatabase {
             await m.createTable(favorites);
             await m.createTable(watchHistory);
           }
+          if (from < 4) {
+            await m.createTable(epgPrograms);
+            await m.createTable(reminders);
+            await customStatement(_epgIndex);
+          }
         },
         beforeOpen: (details) async {
           await customStatement('PRAGMA foreign_keys = ON');
@@ -236,6 +277,7 @@ class LumenDatabase extends _$LumenDatabase {
       'CREATE INDEX IF NOT EXISTS idx_vod_cat ON vod_items (profile_id, category_id, sort_index)',
       'CREATE INDEX IF NOT EXISTS idx_vod_added ON vod_items (profile_id, added_at)',
       'CREATE INDEX IF NOT EXISTS idx_series_cat ON series_items (profile_id, category_id, sort_index)',
+      _epgIndex,
     ]) {
       await customStatement(stmt);
     }

@@ -624,4 +624,85 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsLiveFormatFooter =>
       'MPEG-TS usually works best. If channels stutter or don’t start, try HLS.';
+
+  @override
+  String get syncEpg => 'Loading programme guide …';
+
+  @override
+  String get epgGuide => 'Guide';
+
+  @override
+  String get epgGuideTitle => 'Programme guide';
+
+  @override
+  String get epgNow => 'Now';
+
+  @override
+  String get epgNext => 'Next';
+
+  @override
+  String get epgNoInfo => 'No programme info';
+
+  @override
+  String get epgToday => 'Today';
+
+  @override
+  String get epgTomorrow => 'Tomorrow';
+
+  @override
+  String get epgEmptyTitle => 'No programme guide';
+
+  @override
+  String get epgEmptyBody =>
+      'Your source provides no programme data, or it hasn’t been loaded yet. For M3U you can add an EPG address to the source.';
+
+  @override
+  String get epgWatch => 'Watch';
+
+  @override
+  String get epgRemind => 'Remind me';
+
+  @override
+  String get epgReminderSet => 'Reminder set';
+
+  @override
+  String get epgReminderRemoved => 'Reminder removed';
+
+  @override
+  String get epgReminderDenied =>
+      'Notifications are turned off for Lumen. You can allow them in system settings.';
+
+  @override
+  String epgReminderBody(String channel) {
+    return 'Starting now on $channel';
+  }
+
+  @override
+  String epgMinutesLeft(int minutes) {
+    return '$minutes min left';
+  }
+
+  @override
+  String epgStartsIn(int minutes) {
+    return 'in $minutes min';
+  }
+
+  @override
+  String get epgFailedNote => 'The programme guide couldn’t be loaded.';
+
+  @override
+  String get settingsEpg => 'Programme guide';
+
+  @override
+  String get settingsEpgOffset => 'Time offset';
+
+  @override
+  String get settingsEpgOffsetFooter =>
+      'If your source’s programme times are shifted, correct them here.';
+
+  @override
+  String get offsetNone => 'None';
+
+  @override
+  String get remindersChannel => 'Reminders';
 }

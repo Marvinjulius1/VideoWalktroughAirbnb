@@ -18,6 +18,7 @@ class AppSettings {
     this.onboardingDone = false,
     this.autoRefresh = true,
     this.liveFormat = StreamFormat.ts,
+    this.epgOffsetMinutes = 0,
   });
 
   /// Standard ist Dunkel (Design-Vorgabe), nicht System.
@@ -35,6 +36,11 @@ class AppSettings {
   /// Bevorzugtes Format für Live-Streams bei Xtream (`.ts` oder `.m3u8`).
   final StreamFormat liveFormat;
 
+  /// Korrektur für falsch verschobene EPG-Zeiten (in Minuten).
+  final int epgOffsetMinutes;
+
+  Duration get epgOffset => Duration(minutes: epgOffsetMinutes);
+
   Locale? get locale => localeCode == null ? null : Locale(localeCode!);
 
   AppSettings copyWith({
@@ -45,6 +51,7 @@ class AppSettings {
     bool? onboardingDone,
     bool? autoRefresh,
     StreamFormat? liveFormat,
+    int? epgOffsetMinutes,
   }) =>
       AppSettings(
         themeMode: themeMode ?? this.themeMode,
@@ -54,6 +61,7 @@ class AppSettings {
         onboardingDone: onboardingDone ?? this.onboardingDone,
         autoRefresh: autoRefresh ?? this.autoRefresh,
         liveFormat: liveFormat ?? this.liveFormat,
+        epgOffsetMinutes: epgOffsetMinutes ?? this.epgOffsetMinutes,
       );
 
   Map<String, String> toEntries() => {
@@ -64,6 +72,7 @@ class AppSettings {
         'onboarding_done': '$onboardingDone',
         'auto_refresh': '$autoRefresh',
         'live_format': liveFormat.name,
+        'epg_offset': '$epgOffsetMinutes',
       };
 
   factory AppSettings.fromEntries(Map<String, String> e) => AppSettings(
@@ -77,6 +86,7 @@ class AppSettings {
         onboardingDone: e['onboarding_done'] == 'true',
         autoRefresh: e['auto_refresh'] != 'false',
         liveFormat: e['live_format'] == 'm3u8' ? StreamFormat.m3u8 : StreamFormat.ts,
+        epgOffsetMinutes: int.tryParse(e['epg_offset'] ?? '')?.clamp(-720, 720) ?? 0,
       );
 }
 
@@ -132,6 +142,8 @@ class SettingsController extends Notifier<AppSettings> {
   Future<void> setLocale(String? code) =>
       _set(state.copyWith(localeCode: () => code));
   Future<void> setHaptics(bool v) => _set(state.copyWith(haptics: v));
+  Future<void> setEpgOffset(int minutes) =>
+      _set(state.copyWith(epgOffsetMinutes: minutes.clamp(-720, 720)));
   Future<void> setLiveFormat(StreamFormat f) => _set(state.copyWith(liveFormat: f));
   Future<void> setAutoRefresh(bool v) => _set(state.copyWith(autoRefresh: v));
   Future<void> completeOnboarding() =>

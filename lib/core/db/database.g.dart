@@ -4875,6 +4875,985 @@ class WatchHistoryCompanion extends UpdateCompanion<HistoryRow> {
   }
 }
 
+class $EpgProgramsTable extends EpgPrograms
+    with TableInfo<$EpgProgramsTable, EpgRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EpgProgramsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta(
+    'profileId',
+  );
+  @override
+  late final GeneratedColumn<String> profileId = GeneratedColumn<String>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _channelIdMeta = const VerificationMeta(
+    'channelId',
+  );
+  @override
+  late final GeneratedColumn<String> channelId = GeneratedColumn<String>(
+    'channel_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startUtcMeta = const VerificationMeta(
+    'startUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startUtc = GeneratedColumn<DateTime>(
+    'start_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endUtcMeta = const VerificationMeta('endUtc');
+  @override
+  late final GeneratedColumn<DateTime> endUtc = GeneratedColumn<DateTime>(
+    'end_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    profileId,
+    channelId,
+    startUtc,
+    endUtc,
+    title,
+    description,
+    category,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'epg_programs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<EpgRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('profile_id')) {
+      context.handle(
+        _profileIdMeta,
+        profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_profileIdMeta);
+    }
+    if (data.containsKey('channel_id')) {
+      context.handle(
+        _channelIdMeta,
+        channelId.isAcceptableOrUnknown(data['channel_id']!, _channelIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_channelIdMeta);
+    }
+    if (data.containsKey('start_utc')) {
+      context.handle(
+        _startUtcMeta,
+        startUtc.isAcceptableOrUnknown(data['start_utc']!, _startUtcMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startUtcMeta);
+    }
+    if (data.containsKey('end_utc')) {
+      context.handle(
+        _endUtcMeta,
+        endUtc.isAcceptableOrUnknown(data['end_utc']!, _endUtcMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endUtcMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  EpgRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EpgRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      channelId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}channel_id'],
+      )!,
+      startUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_utc'],
+      )!,
+      endUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_utc'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      ),
+    );
+  }
+
+  @override
+  $EpgProgramsTable createAlias(String alias) {
+    return $EpgProgramsTable(attachedDatabase, alias);
+  }
+}
+
+class EpgRow extends DataClass implements Insertable<EpgRow> {
+  final int id;
+  final String profileId;
+  final String channelId;
+  final DateTime startUtc;
+  final DateTime endUtc;
+  final String title;
+  final String? description;
+  final String? category;
+  const EpgRow({
+    required this.id,
+    required this.profileId,
+    required this.channelId,
+    required this.startUtc,
+    required this.endUtc,
+    required this.title,
+    this.description,
+    this.category,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['channel_id'] = Variable<String>(channelId);
+    map['start_utc'] = Variable<DateTime>(startUtc);
+    map['end_utc'] = Variable<DateTime>(endUtc);
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || category != null) {
+      map['category'] = Variable<String>(category);
+    }
+    return map;
+  }
+
+  EpgProgramsCompanion toCompanion(bool nullToAbsent) {
+    return EpgProgramsCompanion(
+      id: Value(id),
+      profileId: Value(profileId),
+      channelId: Value(channelId),
+      startUtc: Value(startUtc),
+      endUtc: Value(endUtc),
+      title: Value(title),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      category: category == null && nullToAbsent
+          ? const Value.absent()
+          : Value(category),
+    );
+  }
+
+  factory EpgRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EpgRow(
+      id: serializer.fromJson<int>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      channelId: serializer.fromJson<String>(json['channelId']),
+      startUtc: serializer.fromJson<DateTime>(json['startUtc']),
+      endUtc: serializer.fromJson<DateTime>(json['endUtc']),
+      title: serializer.fromJson<String>(json['title']),
+      description: serializer.fromJson<String?>(json['description']),
+      category: serializer.fromJson<String?>(json['category']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'channelId': serializer.toJson<String>(channelId),
+      'startUtc': serializer.toJson<DateTime>(startUtc),
+      'endUtc': serializer.toJson<DateTime>(endUtc),
+      'title': serializer.toJson<String>(title),
+      'description': serializer.toJson<String?>(description),
+      'category': serializer.toJson<String?>(category),
+    };
+  }
+
+  EpgRow copyWith({
+    int? id,
+    String? profileId,
+    String? channelId,
+    DateTime? startUtc,
+    DateTime? endUtc,
+    String? title,
+    Value<String?> description = const Value.absent(),
+    Value<String?> category = const Value.absent(),
+  }) => EpgRow(
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    channelId: channelId ?? this.channelId,
+    startUtc: startUtc ?? this.startUtc,
+    endUtc: endUtc ?? this.endUtc,
+    title: title ?? this.title,
+    description: description.present ? description.value : this.description,
+    category: category.present ? category.value : this.category,
+  );
+  EpgRow copyWithCompanion(EpgProgramsCompanion data) {
+    return EpgRow(
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      channelId: data.channelId.present ? data.channelId.value : this.channelId,
+      startUtc: data.startUtc.present ? data.startUtc.value : this.startUtc,
+      endUtc: data.endUtc.present ? data.endUtc.value : this.endUtc,
+      title: data.title.present ? data.title.value : this.title,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      category: data.category.present ? data.category.value : this.category,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EpgRow(')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('channelId: $channelId, ')
+          ..write('startUtc: $startUtc, ')
+          ..write('endUtc: $endUtc, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('category: $category')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    profileId,
+    channelId,
+    startUtc,
+    endUtc,
+    title,
+    description,
+    category,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EpgRow &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.channelId == this.channelId &&
+          other.startUtc == this.startUtc &&
+          other.endUtc == this.endUtc &&
+          other.title == this.title &&
+          other.description == this.description &&
+          other.category == this.category);
+}
+
+class EpgProgramsCompanion extends UpdateCompanion<EpgRow> {
+  final Value<int> id;
+  final Value<String> profileId;
+  final Value<String> channelId;
+  final Value<DateTime> startUtc;
+  final Value<DateTime> endUtc;
+  final Value<String> title;
+  final Value<String?> description;
+  final Value<String?> category;
+  const EpgProgramsCompanion({
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.channelId = const Value.absent(),
+    this.startUtc = const Value.absent(),
+    this.endUtc = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+    this.category = const Value.absent(),
+  });
+  EpgProgramsCompanion.insert({
+    this.id = const Value.absent(),
+    required String profileId,
+    required String channelId,
+    required DateTime startUtc,
+    required DateTime endUtc,
+    required String title,
+    this.description = const Value.absent(),
+    this.category = const Value.absent(),
+  }) : profileId = Value(profileId),
+       channelId = Value(channelId),
+       startUtc = Value(startUtc),
+       endUtc = Value(endUtc),
+       title = Value(title);
+  static Insertable<EpgRow> custom({
+    Expression<int>? id,
+    Expression<String>? profileId,
+    Expression<String>? channelId,
+    Expression<DateTime>? startUtc,
+    Expression<DateTime>? endUtc,
+    Expression<String>? title,
+    Expression<String>? description,
+    Expression<String>? category,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (channelId != null) 'channel_id': channelId,
+      if (startUtc != null) 'start_utc': startUtc,
+      if (endUtc != null) 'end_utc': endUtc,
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      if (category != null) 'category': category,
+    });
+  }
+
+  EpgProgramsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? profileId,
+    Value<String>? channelId,
+    Value<DateTime>? startUtc,
+    Value<DateTime>? endUtc,
+    Value<String>? title,
+    Value<String?>? description,
+    Value<String?>? category,
+  }) {
+    return EpgProgramsCompanion(
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      channelId: channelId ?? this.channelId,
+      startUtc: startUtc ?? this.startUtc,
+      endUtc: endUtc ?? this.endUtc,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      category: category ?? this.category,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (channelId.present) {
+      map['channel_id'] = Variable<String>(channelId.value);
+    }
+    if (startUtc.present) {
+      map['start_utc'] = Variable<DateTime>(startUtc.value);
+    }
+    if (endUtc.present) {
+      map['end_utc'] = Variable<DateTime>(endUtc.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EpgProgramsCompanion(')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('channelId: $channelId, ')
+          ..write('startUtc: $startUtc, ')
+          ..write('endUtc: $endUtc, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('category: $category')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $RemindersTable extends Reminders
+    with TableInfo<$RemindersTable, ReminderRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RemindersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta(
+    'profileId',
+  );
+  @override
+  late final GeneratedColumn<String> profileId = GeneratedColumn<String>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _channelKeyMeta = const VerificationMeta(
+    'channelKey',
+  );
+  @override
+  late final GeneratedColumn<String> channelKey = GeneratedColumn<String>(
+    'channel_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _channelNameMeta = const VerificationMeta(
+    'channelName',
+  );
+  @override
+  late final GeneratedColumn<String> channelName = GeneratedColumn<String>(
+    'channel_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _epgChannelIdMeta = const VerificationMeta(
+    'epgChannelId',
+  );
+  @override
+  late final GeneratedColumn<String> epgChannelId = GeneratedColumn<String>(
+    'epg_channel_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startUtcMeta = const VerificationMeta(
+    'startUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startUtc = GeneratedColumn<DateTime>(
+    'start_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    profileId,
+    channelKey,
+    channelName,
+    epgChannelId,
+    title,
+    startUtc,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'reminders';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ReminderRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('profile_id')) {
+      context.handle(
+        _profileIdMeta,
+        profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_profileIdMeta);
+    }
+    if (data.containsKey('channel_key')) {
+      context.handle(
+        _channelKeyMeta,
+        channelKey.isAcceptableOrUnknown(data['channel_key']!, _channelKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_channelKeyMeta);
+    }
+    if (data.containsKey('channel_name')) {
+      context.handle(
+        _channelNameMeta,
+        channelName.isAcceptableOrUnknown(
+          data['channel_name']!,
+          _channelNameMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_channelNameMeta);
+    }
+    if (data.containsKey('epg_channel_id')) {
+      context.handle(
+        _epgChannelIdMeta,
+        epgChannelId.isAcceptableOrUnknown(
+          data['epg_channel_id']!,
+          _epgChannelIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_epgChannelIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('start_utc')) {
+      context.handle(
+        _startUtcMeta,
+        startUtc.isAcceptableOrUnknown(data['start_utc']!, _startUtcMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startUtcMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {profileId, epgChannelId, startUtc},
+  ];
+  @override
+  ReminderRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ReminderRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      channelKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}channel_key'],
+      )!,
+      channelName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}channel_name'],
+      )!,
+      epgChannelId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}epg_channel_id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      startUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_utc'],
+      )!,
+    );
+  }
+
+  @override
+  $RemindersTable createAlias(String alias) {
+    return $RemindersTable(attachedDatabase, alias);
+  }
+}
+
+class ReminderRow extends DataClass implements Insertable<ReminderRow> {
+  final int id;
+  final String profileId;
+  final String channelKey;
+  final String channelName;
+  final String epgChannelId;
+  final String title;
+  final DateTime startUtc;
+  const ReminderRow({
+    required this.id,
+    required this.profileId,
+    required this.channelKey,
+    required this.channelName,
+    required this.epgChannelId,
+    required this.title,
+    required this.startUtc,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['channel_key'] = Variable<String>(channelKey);
+    map['channel_name'] = Variable<String>(channelName);
+    map['epg_channel_id'] = Variable<String>(epgChannelId);
+    map['title'] = Variable<String>(title);
+    map['start_utc'] = Variable<DateTime>(startUtc);
+    return map;
+  }
+
+  RemindersCompanion toCompanion(bool nullToAbsent) {
+    return RemindersCompanion(
+      id: Value(id),
+      profileId: Value(profileId),
+      channelKey: Value(channelKey),
+      channelName: Value(channelName),
+      epgChannelId: Value(epgChannelId),
+      title: Value(title),
+      startUtc: Value(startUtc),
+    );
+  }
+
+  factory ReminderRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ReminderRow(
+      id: serializer.fromJson<int>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      channelKey: serializer.fromJson<String>(json['channelKey']),
+      channelName: serializer.fromJson<String>(json['channelName']),
+      epgChannelId: serializer.fromJson<String>(json['epgChannelId']),
+      title: serializer.fromJson<String>(json['title']),
+      startUtc: serializer.fromJson<DateTime>(json['startUtc']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'channelKey': serializer.toJson<String>(channelKey),
+      'channelName': serializer.toJson<String>(channelName),
+      'epgChannelId': serializer.toJson<String>(epgChannelId),
+      'title': serializer.toJson<String>(title),
+      'startUtc': serializer.toJson<DateTime>(startUtc),
+    };
+  }
+
+  ReminderRow copyWith({
+    int? id,
+    String? profileId,
+    String? channelKey,
+    String? channelName,
+    String? epgChannelId,
+    String? title,
+    DateTime? startUtc,
+  }) => ReminderRow(
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    channelKey: channelKey ?? this.channelKey,
+    channelName: channelName ?? this.channelName,
+    epgChannelId: epgChannelId ?? this.epgChannelId,
+    title: title ?? this.title,
+    startUtc: startUtc ?? this.startUtc,
+  );
+  ReminderRow copyWithCompanion(RemindersCompanion data) {
+    return ReminderRow(
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      channelKey: data.channelKey.present
+          ? data.channelKey.value
+          : this.channelKey,
+      channelName: data.channelName.present
+          ? data.channelName.value
+          : this.channelName,
+      epgChannelId: data.epgChannelId.present
+          ? data.epgChannelId.value
+          : this.epgChannelId,
+      title: data.title.present ? data.title.value : this.title,
+      startUtc: data.startUtc.present ? data.startUtc.value : this.startUtc,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReminderRow(')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('channelKey: $channelKey, ')
+          ..write('channelName: $channelName, ')
+          ..write('epgChannelId: $epgChannelId, ')
+          ..write('title: $title, ')
+          ..write('startUtc: $startUtc')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    profileId,
+    channelKey,
+    channelName,
+    epgChannelId,
+    title,
+    startUtc,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ReminderRow &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.channelKey == this.channelKey &&
+          other.channelName == this.channelName &&
+          other.epgChannelId == this.epgChannelId &&
+          other.title == this.title &&
+          other.startUtc == this.startUtc);
+}
+
+class RemindersCompanion extends UpdateCompanion<ReminderRow> {
+  final Value<int> id;
+  final Value<String> profileId;
+  final Value<String> channelKey;
+  final Value<String> channelName;
+  final Value<String> epgChannelId;
+  final Value<String> title;
+  final Value<DateTime> startUtc;
+  const RemindersCompanion({
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.channelKey = const Value.absent(),
+    this.channelName = const Value.absent(),
+    this.epgChannelId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.startUtc = const Value.absent(),
+  });
+  RemindersCompanion.insert({
+    this.id = const Value.absent(),
+    required String profileId,
+    required String channelKey,
+    required String channelName,
+    required String epgChannelId,
+    required String title,
+    required DateTime startUtc,
+  }) : profileId = Value(profileId),
+       channelKey = Value(channelKey),
+       channelName = Value(channelName),
+       epgChannelId = Value(epgChannelId),
+       title = Value(title),
+       startUtc = Value(startUtc);
+  static Insertable<ReminderRow> custom({
+    Expression<int>? id,
+    Expression<String>? profileId,
+    Expression<String>? channelKey,
+    Expression<String>? channelName,
+    Expression<String>? epgChannelId,
+    Expression<String>? title,
+    Expression<DateTime>? startUtc,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (channelKey != null) 'channel_key': channelKey,
+      if (channelName != null) 'channel_name': channelName,
+      if (epgChannelId != null) 'epg_channel_id': epgChannelId,
+      if (title != null) 'title': title,
+      if (startUtc != null) 'start_utc': startUtc,
+    });
+  }
+
+  RemindersCompanion copyWith({
+    Value<int>? id,
+    Value<String>? profileId,
+    Value<String>? channelKey,
+    Value<String>? channelName,
+    Value<String>? epgChannelId,
+    Value<String>? title,
+    Value<DateTime>? startUtc,
+  }) {
+    return RemindersCompanion(
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      channelKey: channelKey ?? this.channelKey,
+      channelName: channelName ?? this.channelName,
+      epgChannelId: epgChannelId ?? this.epgChannelId,
+      title: title ?? this.title,
+      startUtc: startUtc ?? this.startUtc,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (channelKey.present) {
+      map['channel_key'] = Variable<String>(channelKey.value);
+    }
+    if (channelName.present) {
+      map['channel_name'] = Variable<String>(channelName.value);
+    }
+    if (epgChannelId.present) {
+      map['epg_channel_id'] = Variable<String>(epgChannelId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (startUtc.present) {
+      map['start_utc'] = Variable<DateTime>(startUtc.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RemindersCompanion(')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('channelKey: $channelKey, ')
+          ..write('channelName: $channelName, ')
+          ..write('epgChannelId: $epgChannelId, ')
+          ..write('title: $title, ')
+          ..write('startUtc: $startUtc')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$LumenDatabase extends GeneratedDatabase {
   _$LumenDatabase(QueryExecutor e) : super(e);
   $LumenDatabaseManager get managers => $LumenDatabaseManager(this);
@@ -4887,6 +5866,8 @@ abstract class _$LumenDatabase extends GeneratedDatabase {
   late final $AccountInfosTable accountInfos = $AccountInfosTable(this);
   late final $FavoritesTable favorites = $FavoritesTable(this);
   late final $WatchHistoryTable watchHistory = $WatchHistoryTable(this);
+  late final $EpgProgramsTable epgPrograms = $EpgProgramsTable(this);
+  late final $RemindersTable reminders = $RemindersTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4901,6 +5882,8 @@ abstract class _$LumenDatabase extends GeneratedDatabase {
     accountInfos,
     favorites,
     watchHistory,
+    epgPrograms,
+    reminders,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -4952,6 +5935,20 @@ abstract class _$LumenDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('watch_history', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('epg_programs', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('reminders', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -5109,6 +6106,42 @@ final class $$ProfilesTableReferences
     ).filter((f) => f.profileId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_watchHistoryRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$EpgProgramsTable, List<EpgRow>>
+  _epgProgramsRefsTable(_$LumenDatabase db) => MultiTypedResultKey.fromTable(
+    db.epgPrograms,
+    aliasName: 'profiles__id__epg_programs__profile_id',
+  );
+
+  $$EpgProgramsTableProcessedTableManager get epgProgramsRefs {
+    final manager = $$EpgProgramsTableTableManager(
+      $_db,
+      $_db.epgPrograms,
+    ).filter((f) => f.profileId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_epgProgramsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$RemindersTable, List<ReminderRow>>
+  _remindersRefsTable(_$LumenDatabase db) => MultiTypedResultKey.fromTable(
+    db.reminders,
+    aliasName: 'profiles__id__reminders__profile_id',
+  );
+
+  $$RemindersTableProcessedTableManager get remindersRefs {
+    final manager = $$RemindersTableTableManager(
+      $_db,
+      $_db.reminders,
+    ).filter((f) => f.profileId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_remindersRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -5341,6 +6374,56 @@ class $$ProfilesTableFilterComposer
           }) => $$WatchHistoryTableFilterComposer(
             $db: $db,
             $table: $db.watchHistory,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> epgProgramsRefs(
+    Expression<bool> Function($$EpgProgramsTableFilterComposer f) f,
+  ) {
+    final $$EpgProgramsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.epgPrograms,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EpgProgramsTableFilterComposer(
+            $db: $db,
+            $table: $db.epgPrograms,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> remindersRefs(
+    Expression<bool> Function($$RemindersTableFilterComposer f) f,
+  ) {
+    final $$RemindersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.reminders,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RemindersTableFilterComposer(
+            $db: $db,
+            $table: $db.reminders,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5628,6 +6711,56 @@ class $$ProfilesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> epgProgramsRefs<T extends Object>(
+    Expression<T> Function($$EpgProgramsTableAnnotationComposer a) f,
+  ) {
+    final $$EpgProgramsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.epgPrograms,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$EpgProgramsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.epgPrograms,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> remindersRefs<T extends Object>(
+    Expression<T> Function($$RemindersTableAnnotationComposer a) f,
+  ) {
+    final $$RemindersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.reminders,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RemindersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.reminders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ProfilesTableTableManager
@@ -5651,6 +6784,8 @@ class $$ProfilesTableTableManager
             bool accountInfosRefs,
             bool favoritesRefs,
             bool watchHistoryRefs,
+            bool epgProgramsRefs,
+            bool remindersRefs,
           })
         > {
   $$ProfilesTableTableManager(_$LumenDatabase db, $ProfilesTable table)
@@ -5733,6 +6868,8 @@ class $$ProfilesTableTableManager
                 accountInfosRefs = false,
                 favoritesRefs = false,
                 watchHistoryRefs = false,
+                epgProgramsRefs = false,
+                remindersRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -5744,6 +6881,8 @@ class $$ProfilesTableTableManager
                     if (accountInfosRefs) db.accountInfos,
                     if (favoritesRefs) db.favorites,
                     if (watchHistoryRefs) db.watchHistory,
+                    if (epgProgramsRefs) db.epgPrograms,
+                    if (remindersRefs) db.reminders,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -5888,6 +7027,46 @@ class $$ProfilesTableTableManager
                           referencedColumn: 'profile_id',
                           typedResults: items,
                         ),
+                      if (epgProgramsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          ProfileRow,
+                          $ProfilesTable,
+                          EpgRow,
+                          $EpgProgramsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._epgProgramsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).epgProgramsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'profile_id',
+                          typedResults: items,
+                        ),
+                      if (remindersRefs)
+                        await $_getPrefetchedDataByColumns<
+                          ProfileRow,
+                          $ProfilesTable,
+                          ReminderRow,
+                          $RemindersTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._remindersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).remindersRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'profile_id',
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -5916,6 +7095,8 @@ typedef $$ProfilesTableProcessedTableManager =
         bool accountInfosRefs,
         bool favoritesRefs,
         bool watchHistoryRefs,
+        bool epgProgramsRefs,
+        bool remindersRefs,
       })
     >;
 typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
@@ -8818,6 +9999,725 @@ typedef $$WatchHistoryTableProcessedTableManager =
       HistoryRow,
       PrefetchHooks Function({bool profileId})
     >;
+typedef $$EpgProgramsTableCreateCompanionBuilder =
+    EpgProgramsCompanion Function({
+      Value<int> id,
+      required String profileId,
+      required String channelId,
+      required DateTime startUtc,
+      required DateTime endUtc,
+      required String title,
+      Value<String?> description,
+      Value<String?> category,
+    });
+typedef $$EpgProgramsTableUpdateCompanionBuilder =
+    EpgProgramsCompanion Function({
+      Value<int> id,
+      Value<String> profileId,
+      Value<String> channelId,
+      Value<DateTime> startUtc,
+      Value<DateTime> endUtc,
+      Value<String> title,
+      Value<String?> description,
+      Value<String?> category,
+    });
+
+final class $$EpgProgramsTableReferences
+    extends BaseReferences<_$LumenDatabase, $EpgProgramsTable, EpgRow> {
+  $$EpgProgramsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ProfilesTable _profileIdTable(_$LumenDatabase db) =>
+      db.profiles.createAlias('epg_programs__profile_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get profileId {
+    final $_column = $_itemColumn<String>('profile_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_profileIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$EpgProgramsTableFilterComposer
+    extends Composer<_$LumenDatabase, $EpgProgramsTable> {
+  $$EpgProgramsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get channelId => $composableBuilder(
+    column: $table.channelId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startUtc => $composableBuilder(
+    column: $table.startUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endUtc => $composableBuilder(
+    column: $table.endUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProfilesTableFilterComposer get profileId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$EpgProgramsTableOrderingComposer
+    extends Composer<_$LumenDatabase, $EpgProgramsTable> {
+  $$EpgProgramsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get channelId => $composableBuilder(
+    column: $table.channelId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startUtc => $composableBuilder(
+    column: $table.startUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endUtc => $composableBuilder(
+    column: $table.endUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProfilesTableOrderingComposer get profileId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$EpgProgramsTableAnnotationComposer
+    extends Composer<_$LumenDatabase, $EpgProgramsTable> {
+  $$EpgProgramsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get channelId =>
+      $composableBuilder(column: $table.channelId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startUtc =>
+      $composableBuilder(column: $table.startUtc, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endUtc =>
+      $composableBuilder(column: $table.endUtc, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  $$ProfilesTableAnnotationComposer get profileId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$EpgProgramsTableTableManager
+    extends
+        RootTableManager<
+          _$LumenDatabase,
+          $EpgProgramsTable,
+          EpgRow,
+          $$EpgProgramsTableFilterComposer,
+          $$EpgProgramsTableOrderingComposer,
+          $$EpgProgramsTableAnnotationComposer,
+          $$EpgProgramsTableCreateCompanionBuilder,
+          $$EpgProgramsTableUpdateCompanionBuilder,
+          (EpgRow, $$EpgProgramsTableReferences),
+          EpgRow,
+          PrefetchHooks Function({bool profileId})
+        > {
+  $$EpgProgramsTableTableManager(_$LumenDatabase db, $EpgProgramsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EpgProgramsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$EpgProgramsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$EpgProgramsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> profileId = const Value.absent(),
+                Value<String> channelId = const Value.absent(),
+                Value<DateTime> startUtc = const Value.absent(),
+                Value<DateTime> endUtc = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+              }) => EpgProgramsCompanion(
+                id: id,
+                profileId: profileId,
+                channelId: channelId,
+                startUtc: startUtc,
+                endUtc: endUtc,
+                title: title,
+                description: description,
+                category: category,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String profileId,
+                required String channelId,
+                required DateTime startUtc,
+                required DateTime endUtc,
+                required String title,
+                Value<String?> description = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+              }) => EpgProgramsCompanion.insert(
+                id: id,
+                profileId: profileId,
+                channelId: channelId,
+                startUtc: startUtc,
+                endUtc: endUtc,
+                title: title,
+                description: description,
+                category: category,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$EpgProgramsTable, EpgRow>(table),
+                  $$EpgProgramsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({profileId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (profileId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.profileId,
+                        referencedTable: $$EpgProgramsTableReferences
+                            ._profileIdTable(db),
+                        referencedColumn: $$EpgProgramsTableReferences
+                            ._profileIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$EpgProgramsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$LumenDatabase,
+      $EpgProgramsTable,
+      EpgRow,
+      $$EpgProgramsTableFilterComposer,
+      $$EpgProgramsTableOrderingComposer,
+      $$EpgProgramsTableAnnotationComposer,
+      $$EpgProgramsTableCreateCompanionBuilder,
+      $$EpgProgramsTableUpdateCompanionBuilder,
+      (EpgRow, $$EpgProgramsTableReferences),
+      EpgRow,
+      PrefetchHooks Function({bool profileId})
+    >;
+typedef $$RemindersTableCreateCompanionBuilder = RemindersCompanion Function({
+  Value<int> id,
+  required String profileId,
+  required String channelKey,
+  required String channelName,
+  required String epgChannelId,
+  required String title,
+  required DateTime startUtc,
+});
+typedef $$RemindersTableUpdateCompanionBuilder = RemindersCompanion Function({
+  Value<int> id,
+  Value<String> profileId,
+  Value<String> channelKey,
+  Value<String> channelName,
+  Value<String> epgChannelId,
+  Value<String> title,
+  Value<DateTime> startUtc,
+});
+
+final class $$RemindersTableReferences
+    extends BaseReferences<_$LumenDatabase, $RemindersTable, ReminderRow> {
+  $$RemindersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ProfilesTable _profileIdTable(_$LumenDatabase db) =>
+      db.profiles.createAlias('reminders__profile_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get profileId {
+    final $_column = $_itemColumn<String>('profile_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_profileIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$RemindersTableFilterComposer
+    extends Composer<_$LumenDatabase, $RemindersTable> {
+  $$RemindersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get channelKey => $composableBuilder(
+    column: $table.channelKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get channelName => $composableBuilder(
+    column: $table.channelName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get epgChannelId => $composableBuilder(
+    column: $table.epgChannelId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startUtc => $composableBuilder(
+    column: $table.startUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProfilesTableFilterComposer get profileId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RemindersTableOrderingComposer
+    extends Composer<_$LumenDatabase, $RemindersTable> {
+  $$RemindersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get channelKey => $composableBuilder(
+    column: $table.channelKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get channelName => $composableBuilder(
+    column: $table.channelName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get epgChannelId => $composableBuilder(
+    column: $table.epgChannelId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startUtc => $composableBuilder(
+    column: $table.startUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProfilesTableOrderingComposer get profileId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RemindersTableAnnotationComposer
+    extends Composer<_$LumenDatabase, $RemindersTable> {
+  $$RemindersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get channelKey => $composableBuilder(
+    column: $table.channelKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get channelName => $composableBuilder(
+    column: $table.channelName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get epgChannelId => $composableBuilder(
+    column: $table.epgChannelId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startUtc =>
+      $composableBuilder(column: $table.startUtc, builder: (column) => column);
+
+  $$ProfilesTableAnnotationComposer get profileId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RemindersTableTableManager
+    extends
+        RootTableManager<
+          _$LumenDatabase,
+          $RemindersTable,
+          ReminderRow,
+          $$RemindersTableFilterComposer,
+          $$RemindersTableOrderingComposer,
+          $$RemindersTableAnnotationComposer,
+          $$RemindersTableCreateCompanionBuilder,
+          $$RemindersTableUpdateCompanionBuilder,
+          (ReminderRow, $$RemindersTableReferences),
+          ReminderRow,
+          PrefetchHooks Function({bool profileId})
+        > {
+  $$RemindersTableTableManager(_$LumenDatabase db, $RemindersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RemindersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RemindersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RemindersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> profileId = const Value.absent(),
+                Value<String> channelKey = const Value.absent(),
+                Value<String> channelName = const Value.absent(),
+                Value<String> epgChannelId = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<DateTime> startUtc = const Value.absent(),
+              }) => RemindersCompanion(
+                id: id,
+                profileId: profileId,
+                channelKey: channelKey,
+                channelName: channelName,
+                epgChannelId: epgChannelId,
+                title: title,
+                startUtc: startUtc,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String profileId,
+                required String channelKey,
+                required String channelName,
+                required String epgChannelId,
+                required String title,
+                required DateTime startUtc,
+              }) => RemindersCompanion.insert(
+                id: id,
+                profileId: profileId,
+                channelKey: channelKey,
+                channelName: channelName,
+                epgChannelId: epgChannelId,
+                title: title,
+                startUtc: startUtc,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$RemindersTable, ReminderRow>(table),
+                  $$RemindersTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({profileId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (profileId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.profileId,
+                        referencedTable: $$RemindersTableReferences
+                            ._profileIdTable(db),
+                        referencedColumn: $$RemindersTableReferences
+                            ._profileIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$RemindersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$LumenDatabase,
+      $RemindersTable,
+      ReminderRow,
+      $$RemindersTableFilterComposer,
+      $$RemindersTableOrderingComposer,
+      $$RemindersTableAnnotationComposer,
+      $$RemindersTableCreateCompanionBuilder,
+      $$RemindersTableUpdateCompanionBuilder,
+      (ReminderRow, $$RemindersTableReferences),
+      ReminderRow,
+      PrefetchHooks Function({bool profileId})
+    >;
 
 class $LumenDatabaseManager {
   final _$LumenDatabase _db;
@@ -8840,4 +10740,8 @@ class $LumenDatabaseManager {
       $$FavoritesTableTableManager(_db, _db.favorites);
   $$WatchHistoryTableTableManager get watchHistory =>
       $$WatchHistoryTableTableManager(_db, _db.watchHistory);
+  $$EpgProgramsTableTableManager get epgPrograms =>
+      $$EpgProgramsTableTableManager(_db, _db.epgPrograms);
+  $$RemindersTableTableManager get reminders =>
+      $$RemindersTableTableManager(_db, _db.reminders);
 }

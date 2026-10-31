@@ -13,6 +13,8 @@ import '../sources/data/m3u/m3u_source.dart';
 import '../sources/data/xtream/xtream_client.dart';
 import '../sources/data/xtream/xtream_models.dart';
 import '../sources/domain/source_profile.dart';
+import '../epg/data/epg_store.dart';
+import '../epg/data/epg_sync.dart';
 import 'content_store.dart';
 import 'source_sync.dart';
 
@@ -24,8 +26,14 @@ final dioProvider = Provider<Dio>((ref) {
 
 final contentStoreProvider = Provider((ref) => ContentStore(ref.watch(databaseProvider)));
 
+final epgStoreProvider = Provider((ref) => EpgStore(ref.watch(databaseProvider)));
+
 final sourceSyncProvider = Provider(
-  (ref) => SourceSync(dio: ref.watch(dioProvider), store: ref.watch(contentStoreProvider)),
+  (ref) => SourceSync(
+    dio: ref.watch(dioProvider),
+    store: ref.watch(contentStoreProvider),
+    epg: EpgSync(dio: ref.watch(dioProvider), store: ref.watch(epgStoreProvider)),
+  ),
 );
 
 /// Prüft Zugangsdaten, bevor eine Quelle gespeichert wird.

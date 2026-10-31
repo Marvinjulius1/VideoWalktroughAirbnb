@@ -1243,6 +1243,150 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'MPEG-TS funktioniert meist am besten. Wenn Sender ruckeln oder nicht starten, probiere HLS.'**
   String get settingsLiveFormatFooter;
+
+  /// No description provided for @syncEpg.
+  ///
+  /// In de, this message translates to:
+  /// **'Programmführer wird geladen …'**
+  String get syncEpg;
+
+  /// No description provided for @epgGuide.
+  ///
+  /// In de, this message translates to:
+  /// **'Programm'**
+  String get epgGuide;
+
+  /// No description provided for @epgGuideTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Programmführer'**
+  String get epgGuideTitle;
+
+  /// No description provided for @epgNow.
+  ///
+  /// In de, this message translates to:
+  /// **'Jetzt'**
+  String get epgNow;
+
+  /// No description provided for @epgNext.
+  ///
+  /// In de, this message translates to:
+  /// **'Danach'**
+  String get epgNext;
+
+  /// No description provided for @epgNoInfo.
+  ///
+  /// In de, this message translates to:
+  /// **'Keine Programminfos'**
+  String get epgNoInfo;
+
+  /// No description provided for @epgToday.
+  ///
+  /// In de, this message translates to:
+  /// **'Heute'**
+  String get epgToday;
+
+  /// No description provided for @epgTomorrow.
+  ///
+  /// In de, this message translates to:
+  /// **'Morgen'**
+  String get epgTomorrow;
+
+  /// No description provided for @epgEmptyTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Kein Programmführer'**
+  String get epgEmptyTitle;
+
+  /// No description provided for @epgEmptyBody.
+  ///
+  /// In de, this message translates to:
+  /// **'Deine Quelle liefert keine Programmdaten oder sie wurden noch nicht geladen. Bei M3U kannst du eine EPG-Adresse in der Quelle eintragen.'**
+  String get epgEmptyBody;
+
+  /// No description provided for @epgWatch.
+  ///
+  /// In de, this message translates to:
+  /// **'Ansehen'**
+  String get epgWatch;
+
+  /// No description provided for @epgRemind.
+  ///
+  /// In de, this message translates to:
+  /// **'Erinnern'**
+  String get epgRemind;
+
+  /// No description provided for @epgReminderSet.
+  ///
+  /// In de, this message translates to:
+  /// **'Erinnerung aktiv'**
+  String get epgReminderSet;
+
+  /// No description provided for @epgReminderRemoved.
+  ///
+  /// In de, this message translates to:
+  /// **'Erinnerung entfernt'**
+  String get epgReminderRemoved;
+
+  /// No description provided for @epgReminderDenied.
+  ///
+  /// In de, this message translates to:
+  /// **'Benachrichtigungen sind für Lumen ausgeschaltet. Du kannst sie in den Systemeinstellungen erlauben.'**
+  String get epgReminderDenied;
+
+  /// No description provided for @epgReminderBody.
+  ///
+  /// In de, this message translates to:
+  /// **'Beginnt jetzt auf {channel}'**
+  String epgReminderBody(String channel);
+
+  /// No description provided for @epgMinutesLeft.
+  ///
+  /// In de, this message translates to:
+  /// **'noch {minutes} Min.'**
+  String epgMinutesLeft(int minutes);
+
+  /// No description provided for @epgStartsIn.
+  ///
+  /// In de, this message translates to:
+  /// **'in {minutes} Min.'**
+  String epgStartsIn(int minutes);
+
+  /// No description provided for @epgFailedNote.
+  ///
+  /// In de, this message translates to:
+  /// **'Der Programmführer konnte nicht geladen werden.'**
+  String get epgFailedNote;
+
+  /// No description provided for @settingsEpg.
+  ///
+  /// In de, this message translates to:
+  /// **'Programmführer'**
+  String get settingsEpg;
+
+  /// No description provided for @settingsEpgOffset.
+  ///
+  /// In de, this message translates to:
+  /// **'Zeitverschiebung'**
+  String get settingsEpgOffset;
+
+  /// No description provided for @settingsEpgOffsetFooter.
+  ///
+  /// In de, this message translates to:
+  /// **'Wenn die Sendezeiten deiner Quelle verschoben sind, gleiche sie hier aus.'**
+  String get settingsEpgOffsetFooter;
+
+  /// No description provided for @offsetNone.
+  ///
+  /// In de, this message translates to:
+  /// **'Keine'**
+  String get offsetNone;
+
+  /// No description provided for @remindersChannel.
+  ///
+  /// In de, this message translates to:
+  /// **'Erinnerungen'**
+  String get remindersChannel;
 }
 
 class _AppLocalizationsDelegate

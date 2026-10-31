@@ -140,6 +140,24 @@ class SettingsScreen extends ConsumerWidget {
           gap,
           SliverToBoxAdapter(
             child: LumenGroup(
+              title: t.settingsEpg,
+              footer: t.settingsEpgOffsetFooter,
+              children: [
+                LumenListTile(
+                  title: t.settingsEpgOffset,
+                  leading: LucideIcons.clock,
+                  trailing: _OffsetStepper(
+                    minutes: s.epgOffsetMinutes,
+                    noneLabel: t.offsetNone,
+                    onChanged: ctrl.setEpgOffset,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          gap,
+          SliverToBoxAdapter(
+            child: LumenGroup(
               title: t.settingsInfo,
               footer: t.contentNotice,
               children: [
@@ -266,6 +284,56 @@ class _AccentSwatch extends StatelessWidget {
               : null,
         ),
       ),
+    );
+  }
+}
+
+/// −/+ in 30-Minuten-Schritten (bis ±12 Stunden).
+class _OffsetStepper extends StatelessWidget {
+  const _OffsetStepper({required this.minutes, required this.noneLabel, required this.onChanged});
+
+  final int minutes;
+  final String noneLabel;
+  final ValueChanged<int> onChanged;
+
+  String _label() {
+    if (minutes == 0) return noneLabel;
+    final sign = minutes > 0 ? '+' : '−';
+    final m = minutes.abs();
+    final h = m ~/ 60;
+    final rest = m % 60;
+    return rest == 0 ? '$sign$h h' : '$sign$h:${rest.toString().padLeft(2, '0')} h';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.lumen;
+    Widget btn(IconData icon, int delta, String key) => LumenPressable(
+          key: Key(key),
+          onPressed: () => onChanged(minutes + delta),
+          borderRadius: LumenRadius.pillAll,
+          semanticLabel: delta > 0 ? '+30' : '−30',
+          child: Container(
+            width: l.isTv ? 48 : 34,
+            height: l.isTv ? 48 : 34,
+            decoration: BoxDecoration(color: l.palette.surface2, shape: BoxShape.circle),
+            child: Icon(icon, size: 18, color: l.palette.textPrimary),
+          ),
+        );
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        btn(LucideIcons.minus, -30, 'epg-offset-minus'),
+        SizedBox(
+          width: 76,
+          child: Text(_label(),
+              key: const Key('epg-offset-value'),
+              textAlign: TextAlign.center,
+              style: l.text.callout.copyWith(
+                  color: l.palette.textSecondary, fontFeatures: const [FontFeature.tabularFigures()])),
+        ),
+        btn(LucideIcons.plus, 30, 'epg-offset-plus'),
+      ],
     );
   }
 }

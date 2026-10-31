@@ -20,6 +20,7 @@ String syncStageText(AppLocalizations t, SyncStage s) => switch (s) {
       SyncStage.live => t.syncLive,
       SyncStage.vod => t.syncVod,
       SyncStage.series => t.syncSeries,
+      SyncStage.epg => t.syncEpg,
       SyncStage.saving || SyncStage.done => t.syncSaving,
     };
 

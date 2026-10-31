@@ -17,7 +17,11 @@ import '../../core/l10n/app_localizations.dart';
 import '../../core/widgets/lumen_button.dart';
 import '../../core/widgets/lumen_card.dart';
 import '../../core/widgets/pressable.dart';
+import '../../core/widgets/thin_progress.dart';
+import '../epg/epg_providers.dart';
+import '../epg/epg_widgets.dart';
 import '../live/live_providers.dart';
+import '../settings/settings.dart';
 import '../live/widgets/channel_logo.dart';
 import 'live_player_controller.dart';
 import 'player_engine.dart';
@@ -583,6 +587,8 @@ class _Overlay extends StatelessWidget {
                         },
                       ),
                     const Spacer(),
+                    // Laufende und nächste Sendung (falls EPG vorhanden).
+                    _OverlayEpg(epgChannelId: ch.epgChannelId),
                     if (controller.canZap)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -805,6 +811,59 @@ class _OptionsSheetState extends State<_OptionsSheet> {
                   ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OverlayEpg extends ConsumerWidget {
+  const _OverlayEpg({required this.epgChannelId});
+
+  final String? epgChannelId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final info = ref.watch(channelNowNextProvider(epgChannelId)).value;
+    final now = info?.now;
+    if (now == null) return const SizedBox.shrink();
+    final t = AppLocalizations.of(context);
+    final l = context.lumen;
+    final et = EpgTime(context, ref.watch(settingsProvider.select((s) => s.epgOffset)));
+    final epgNow = ref.watch(epgNowProvider);
+    const dim = Color(0xFFD0D0D5);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: LumenSpace.lg),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 720),
+        child: Column(
+          key: const Key('player-epg'),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(now.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: l.text.headline.copyWith(color: Colors.white)),
+            const SizedBox(height: LumenSpace.xs),
+            Row(
+              children: [
+                Text(et.time(now.startUtc),
+                    style: l.text.caption.copyWith(color: dim, fontFeatures: const [FontFeature.tabularFigures()])),
+                const SizedBox(width: LumenSpace.sm),
+                Expanded(child: ThinProgress(value: info!.progressAt(epgNow), color: Colors.white, height: 3)),
+                const SizedBox(width: LumenSpace.sm),
+                Text(et.time(now.endUtc),
+                    style: l.text.caption.copyWith(color: dim, fontFeatures: const [FontFeature.tabularFigures()])),
+              ],
+            ),
+            if (info.next != null) ...[
+              const SizedBox(height: LumenSpace.xs),
+              Text('${t.epgNext}: ${et.time(info.next!.startUtc)} ${info.next!.title}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: l.text.footnote.copyWith(color: dim)),
+            ],
           ],
         ),
       ),

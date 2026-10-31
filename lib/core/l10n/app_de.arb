@@ -254,5 +254,50 @@
         "type": "int"
       }
     }
+  },
+  "syncEpg": "Programmführer wird geladen …",
+  "epgGuide": "Programm",
+  "epgGuideTitle": "Programmführer",
+  "epgNow": "Jetzt",
+  "epgNext": "Danach",
+  "epgNoInfo": "Keine Programminfos",
+  "epgToday": "Heute",
+  "epgTomorrow": "Morgen",
+  "epgEmptyTitle": "Kein Programmführer",
+  "epgEmptyBody": "Deine Quelle liefert keine Programmdaten oder sie wurden noch nicht geladen. Bei M3U kannst du eine EPG-Adresse in der Quelle eintragen.",
+  "epgWatch": "Ansehen",
+  "epgRemind": "Erinnern",
+  "epgReminderSet": "Erinnerung aktiv",
+  "epgReminderRemoved": "Erinnerung entfernt",
+  "epgReminderDenied": "Benachrichtigungen sind für Lumen ausgeschaltet. Du kannst sie in den Systemeinstellungen erlauben.",
+  "epgReminderBody": "Beginnt jetzt auf {channel}",
+  "epgMinutesLeft": "noch {minutes} Min.",
+  "epgStartsIn": "in {minutes} Min.",
+  "epgFailedNote": "Der Programmführer konnte nicht geladen werden.",
+  "settingsEpg": "Programmführer",
+  "settingsEpgOffset": "Zeitverschiebung",
+  "settingsEpgOffsetFooter": "Wenn die Sendezeiten deiner Quelle verschoben sind, gleiche sie hier aus.",
+  "offsetNone": "Keine",
+  "remindersChannel": "Erinnerungen",
+  "@epgReminderBody": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "@epgMinutesLeft": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@epgStartsIn": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
   }
 }

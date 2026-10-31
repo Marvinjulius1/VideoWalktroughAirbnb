@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/epg/guide_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/live/live_screen.dart';
 import '../features/media/media_screen.dart';
@@ -78,7 +79,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             GoRoute(path: '/home', builder: (_, _) => const HomeScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/live', builder: (_, _) => const LiveScreen()),
+            GoRoute(
+              path: '/live',
+              builder: (_, _) => const LiveScreen(),
+              routes: [GoRoute(path: 'guide', builder: (_, _) => const GuideScreen())],
+            ),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/media', builder: (_, _) => const MediaScreen()),

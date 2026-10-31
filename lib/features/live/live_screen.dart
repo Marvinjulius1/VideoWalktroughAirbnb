@@ -16,6 +16,9 @@ import '../../core/widgets/lumen_chip.dart';
 import '../../core/widgets/lumen_page.dart';
 import '../../core/widgets/pressable.dart';
 import '../player/live_player_screen.dart';
+import '../epg/data/epg_store.dart';
+import '../epg/epg_providers.dart';
+import '../epg/epg_widgets.dart';
 import 'data/live_repository.dart';
 import 'live_providers.dart';
 import 'widgets/channel_logo.dart';
@@ -75,6 +78,7 @@ class _PhoneLiveLayout extends ConsumerWidget {
 
     return LumenPage(
       title: t.tabLive,
+      trailing: const _GuideButton(),
       slivers: [
         SliverToBoxAdapter(
           child: SizedBox(
@@ -123,7 +127,12 @@ class _TvLiveLayout extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(t.tabLive, style: l.text.largeTitle.copyWith(color: p.textPrimary)),
+          Row(
+            children: [
+              Expanded(child: Text(t.tabLive, style: l.text.largeTitle.copyWith(color: p.textPrimary))),
+              const _GuideButton(),
+            ],
+          ),
           const SizedBox(height: LumenSpace.xl),
           Expanded(
             child: Row(
@@ -194,6 +203,7 @@ class _ChannelSliver extends ConsumerWidget {
     final channels = ref.watch(liveChannelsProvider).value;
     final filter = ref.watch(effectiveLiveFilterProvider);
     final favs = ref.watch(favoriteKeysProvider(ContentKind.live)).value ?? const {};
+    final epg = ref.watch(liveNowNextProvider).value ?? const {};
 
     if (channels == null) return const SliverToBoxAdapter(child: SizedBox.shrink());
     if (channels.isEmpty) {
@@ -217,6 +227,7 @@ class _ChannelSliver extends ConsumerWidget {
         key: ValueKey('ch-${channels[i].id}'),
         channel: channels[i],
         favorite: favs.contains(channels[i].itemKey),
+        nowNext: epg[channels[i].epgChannelId],
         onPlay: () => openLivePlayer(context, channels, i),
         onToggleFavorite: () {
           final p = ref.read(activeSourceProvider);
@@ -236,9 +247,11 @@ class ChannelTile extends StatelessWidget {
     required this.favorite,
     required this.onPlay,
     required this.onToggleFavorite,
+    this.nowNext,
   });
 
   final ChannelRow channel;
+  final NowNext? nowNext;
   final bool favorite;
   final VoidCallback onPlay;
   final VoidCallback onToggleFavorite;
@@ -283,10 +296,20 @@ class ChannelTile extends StatelessWidget {
                         ),
                       ),
                     Expanded(
-                      child: Text(channel.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: l.text.body.copyWith(color: p.textPrimary)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(channel.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: l.text.body.copyWith(color: p.textPrimary)),
+                          if (nowNext != null) ...[
+                            const SizedBox(height: 2),
+                            NowNextLine(info: nowNext, compact: !tv),
+                          ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -311,6 +334,22 @@ class ChannelTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _GuideButton extends StatelessWidget {
+  const _GuideButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    return LumenChip(
+      key: const Key('open-guide'),
+      label: t.epgGuide,
+      icon: LucideIcons.calendarDays,
+      selected: false,
+      onPressed: () => context.push('/live/guide'),
     );
   }
 }

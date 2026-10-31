@@ -10,13 +10,14 @@ import '../sources/data/m3u/m3u_source.dart';
 import '../sources/data/xtream/xtream_client.dart';
 import '../sources/data/xtream/xtream_models.dart';
 import '../sources/domain/source_profile.dart';
+import '../epg/data/epg_sync.dart';
 import 'content_store.dart';
 
 /// Schritte einer Aktualisierung (für die Fortschrittsanzeige).
-enum SyncStage { connecting, categories, live, vod, series, saving, done }
+enum SyncStage { connecting, categories, live, vod, series, saving, epg, done }
 
 class SyncProgress {
-  const SyncProgress(this.stage, {this.fraction, this.counts});
+  const SyncProgress(this.stage, {this.fraction, this.counts, this.epgCount, this.epgError});
 
   final SyncStage stage;
 
@@ -25,6 +26,12 @@ class SyncProgress {
 
   /// Am Ende: wie viel geladen wurde.
   final ContentCounts? counts;
+
+  /// Am Ende: Anzahl Sendungen im Programmführer (`null` = keine EPG-Quelle).
+  final int? epgCount;
+
+  /// Der Programmführer konnte nicht geladen werden (Inhalte schon).
+  final SourceErrorKind? epgError;
 }
 
 /// Lädt eine Quelle komplett neu und schreibt sie in die Datenbank.
@@ -32,11 +39,14 @@ class SyncProgress {
 /// Ablauf: Netzwerk → Parsen + Umwandeln im Isolate → paketweises
 /// Schreiben in einer Transaktion. Wirft [SourceException].
 class SourceSync {
-  SourceSync({required this.dio, required this.store, M3uSource? m3u})
+  SourceSync({required this.dio, required this.store, this.epg, M3uSource? m3u})
       : m3u = m3u ?? M3uSource(dio);
 
   final Dio dio;
   final ContentStore store;
+
+  /// Optional: Programmführer nach den Inhalten laden.
+  final EpgSync? epg;
   final M3uSource m3u;
 
   Stream<SyncProgress> run(SourceProfile profile, SourceCredentials creds) async* {
@@ -68,8 +78,23 @@ class SourceSync {
       yield* progress.stream;
       await write;
 
+      // Programmführer: Fehler hier sind nicht schlimm – die Sender sind
+      // schon gespeichert und funktionieren auch ohne EPG.
+      int? epgCount;
+      SourceErrorKind? epgError;
+      if (epg != null) {
+        yield const SyncProgress(SyncStage.epg);
+        try {
+          epgCount = await epg!.run(profile, creds, playlistHint: loaded.epgHint);
+        } on SourceException catch (e) {
+          epgError = e.kind;
+        }
+      }
+
       yield SyncProgress(
         SyncStage.done,
+        epgCount: epgCount,
+        epgError: epgError,
         counts: ContentCounts(
           live: loaded.channels.length,
           vod: loaded.vod.length,
@@ -259,12 +284,15 @@ class SourceSync {
           ));
       }
     }
-    return _Loaded(categories, channels, vod, series);
+    return _Loaded(categories, channels, vod, series, epgHint: playlist.epgUrl);
   }
 }
 
 class _Loaded {
-  const _Loaded(this.categories, this.channels, this.vod, this.series);
+  const _Loaded(this.categories, this.channels, this.vod, this.series, {this.epgHint});
+
+  /// EPG-Adresse aus der Kopfzeile einer M3U (`url-tvg`).
+  final String? epgHint;
 
   final List<CategoriesCompanion> categories;
   final List<ChannelsCompanion> channels;

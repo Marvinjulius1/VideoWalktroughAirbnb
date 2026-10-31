@@ -630,4 +630,85 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get settingsLiveFormatFooter =>
       'MPEG-TS funktioniert meist am besten. Wenn Sender ruckeln oder nicht starten, probiere HLS.';
+
+  @override
+  String get syncEpg => 'Programmführer wird geladen …';
+
+  @override
+  String get epgGuide => 'Programm';
+
+  @override
+  String get epgGuideTitle => 'Programmführer';
+
+  @override
+  String get epgNow => 'Jetzt';
+
+  @override
+  String get epgNext => 'Danach';
+
+  @override
+  String get epgNoInfo => 'Keine Programminfos';
+
+  @override
+  String get epgToday => 'Heute';
+
+  @override
+  String get epgTomorrow => 'Morgen';
+
+  @override
+  String get epgEmptyTitle => 'Kein Programmführer';
+
+  @override
+  String get epgEmptyBody =>
+      'Deine Quelle liefert keine Programmdaten oder sie wurden noch nicht geladen. Bei M3U kannst du eine EPG-Adresse in der Quelle eintragen.';
+
+  @override
+  String get epgWatch => 'Ansehen';
+
+  @override
+  String get epgRemind => 'Erinnern';
+
+  @override
+  String get epgReminderSet => 'Erinnerung aktiv';
+
+  @override
+  String get epgReminderRemoved => 'Erinnerung entfernt';
+
+  @override
+  String get epgReminderDenied =>
+      'Benachrichtigungen sind für Lumen ausgeschaltet. Du kannst sie in den Systemeinstellungen erlauben.';
+
+  @override
+  String epgReminderBody(String channel) {
+    return 'Beginnt jetzt auf $channel';
+  }
+
+  @override
+  String epgMinutesLeft(int minutes) {
+    return 'noch $minutes Min.';
+  }
+
+  @override
+  String epgStartsIn(int minutes) {
+    return 'in $minutes Min.';
+  }
+
+  @override
+  String get epgFailedNote => 'Der Programmführer konnte nicht geladen werden.';
+
+  @override
+  String get settingsEpg => 'Programmführer';
+
+  @override
+  String get settingsEpgOffset => 'Zeitverschiebung';
+
+  @override
+  String get settingsEpgOffsetFooter =>
+      'Wenn die Sendezeiten deiner Quelle verschoben sind, gleiche sie hier aus.';
+
+  @override
+  String get offsetNone => 'Keine';
+
+  @override
+  String get remindersChannel => 'Erinnerungen';
 }
